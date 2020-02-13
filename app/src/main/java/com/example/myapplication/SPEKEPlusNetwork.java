@@ -26,37 +26,23 @@ public class SPEKEPlusNetwork {
 
 
     // **************************** ROUND 1 ****************************
-//    BigInteger [] xi = new BigInteger [n];
     BigInteger xi;
-    //    BigInteger [] yi = new BigInteger [n];
     BigInteger yi;
-    //    BigInteger [] gsPowXi = new BigInteger [n];
     BigInteger gsPowXi;
-    //    BigInteger [] gPowYi = new BigInteger [n];
     BigInteger gPowYi;
-    //    BigInteger [] gPowZi = new BigInteger [n];
     BigInteger gPowZi;
-    //    BigInteger [][] schnorrZKPi = new BigInteger [n][2]; // {g^v, r}
     ArrayList<BigInteger> schnorrZKPi = new ArrayList<>();
-    //    String [] signerID = new String [n];
     String signerID;
 
     // **************************** ROUND 2 ****************************
-//    BigInteger [] gPowZiPowYi = new BigInteger [n];
     BigInteger gPowZiPowYi;
-    //    BigInteger [][] chaumPedersonZKPi = new BigInteger [n][3]; // {g^s, (g^z)^s, t}
     ArrayList<BigInteger> chaumPedersonZKPi = new ArrayList<>();
-    //    BigInteger [][] pairwiseKeysMAC = new BigInteger [n][n];
     HashMap<Long, BigInteger> pairwiseKeysMAC = new HashMap<>();
-    //    BigInteger [][] pairwiseKeysKC = new BigInteger [n][n];
     HashMap<Long, BigInteger> pairwiseKeysKC = new HashMap<>();
-    //    BigInteger [][] hMacsMAC = new BigInteger [n][n];
     HashMap<Long, BigInteger> hMacsMAC = new HashMap<>();
-    //    BigInteger [][] hMacsKC = new BigInteger [n][n];
     HashMap<Long, BigInteger> hMacsKC = new HashMap<>();
 
     // **************************** ROUND 3 ****************************
-//    BigInteger [] sessionKeys = new BigInteger [n];
 
     public SPEKEPlusNetwork(String sStr, BigInteger p, BigInteger q, BigInteger g, int n, String id) {
         this.sStr = sStr;
@@ -68,32 +54,17 @@ public class SPEKEPlusNetwork {
     }
 
     public SpekeRoundOne roundOne() {
-//        for (int i=0; i<n; i++) {
         BigInteger gs = getSHA256(sStr);
-        // x_i in [1, q-1]
-//            xi[i] = org.bouncycastle.util.BigIntegers.createRandomInRange(BigInteger.ONE,
-//                    q.subtract(BigInteger.ONE), new SecureRandom());
         xi = org.bouncycastle.util.BigIntegers.createRandomInRange(BigInteger.ONE,
                 q.subtract(BigInteger.ONE), new SecureRandom());
-        // y_i in [0, q-1]
-//            yi[i] = org.bouncycastle.util.BigIntegers.createRandomInRange(BigInteger.ZERO,
-//                    q.subtract(BigInteger.ONE), new SecureRandom());
         yi = org.bouncycastle.util.BigIntegers.createRandomInRange(BigInteger.ZERO,
                 q.subtract(BigInteger.ONE), new SecureRandom());
-//            gsPowXi[i] = gs.modPow(xi[i], p);
         gsPowXi = gs.modPow(xi, p);
-//            gPowYi[i] = g.modPow(yi[i], p);
         gPowYi = g.modPow(yi, p);
-//            signerID = i + "";
-        // one in constructor
         SchnorrZKP schnorrZKP = new SchnorrZKP();
-//            schnorrZKP.generateZKP(p, q, g, gPowYi[i], yi[i], signerID[i]);
         schnorrZKP.generateZKP(p, q, g, gPowYi, yi, signerID);
-//            schnorrZKPi[i][0] = schnorrZKP.getGenPowV();
         schnorrZKPi.add(schnorrZKP.getGenPowV());
-//            schnorrZKPi[i][1] = schnorrZKP.getR();
         schnorrZKPi.add(schnorrZKP.getR());
-//        }
 
         Log.d("speke",  "********** SEND ROUND 1 DATA **********");
         SpekeRoundOne roundOne = new SpekeRoundOne();
@@ -118,31 +89,21 @@ public class SPEKEPlusNetwork {
             long rightNeighbour = Long.parseLong(r.getSignerID().get(iPlusOne));
             long leftNeightbour = Long.parseLong(r.getSignerID().get(iMinusOne));
 
-//            gPowZi[i] = gPowYi[iMinusOne].modInverse(p).multiply(gPowYi[iPlusOne]).mod(p);
             r.getgPowZi().put(current, r.getgPowYi().get(leftNeightbour).modInverse(p).multiply(r.getgPowYi().get(rightNeighbour)).mod(p));
-//            if(gPowZi[i].compareTo(BigInteger.ONE) == 0) {
             if (r.getgPowZi().get(current).compareTo(BigInteger.ONE) == 0)
                 exitWithError("Round 1 verification failed at checking g^{y_{i+1}}/g^{y_{i-1}}!=1 for i="+i);
         }
 
-
-
-
         // Verification
-
-//        for (int i=0; i<n; i++) {
 
         // ith participant
         long cID = Long.parseLong(signerID);
 
         for (int j=0; j<n; j++) {
             long jID = Long.parseLong(r.getSignerID().get(j));
-            // check gs^{x_i} - except ith
             if (cID==jID){
                 continue;
             }
-//            if (gsPowXi[j].compareTo(bigTwo) == -1 ||
-//                    gsPowXi[j].compareTo(p.subtract(bigTwo)) == 1){
             if (r.getGsPowXi().get(jID).compareTo(bigTwo) == -1 ||
                     r.getGsPowXi().get(jID).compareTo(p.subtract(bigTwo)) == 1) {
                 Log.d("speke",  "Round 1 verification failed at checking gs^{x_j} for j="+j);
@@ -153,7 +114,6 @@ public class SPEKEPlusNetwork {
             if (cID==jID) {
                 continue;
             }
-//            if (!verifySchnorrZKP(p, q, g, gPowYi[j], schnorrZKPi[j][0], schnorrZKPi[j][1], signerID[j])) {
             if (!verifySchnorrZKP(p, q, g,
                     r.getgPowYi().get(jID),
                     r.getSchnorrZKPi().get(jID).get(0),
@@ -163,23 +123,18 @@ public class SPEKEPlusNetwork {
                 return false;
             }
         }
-//        }
         return true;
     }
-
 
     public SpekeRoundTwo roundTwo(SpekeRoundOneResponse r) {
         // Round 2: P_i sends A = {g^{y_i}, ZKP, (g^{z_i})^{y_i}, ZKP}, HMAC authentication tag,
         // HMAC key confirmation tag
         Log.d("speke",  "*********** ROUND 2 ***********");
-//        for (int i=0; i<n; i++){
         long cID = Long.parseLong(signerID);
 
-//            gPowZiPowYi[i] = gPowZi[i].modPow(yi[i], p);
         gPowZiPowYi = r.getgPowZi().get(cID).modPow(r.getYi().get(cID), p);
 
         ChaumPedersonZKP chaumPedersonZKP = new ChaumPedersonZKP();
-//            chaumPedersonZKP.generateZKP(p, q, g, gPowYi[i], yi[i], gPowZi[i], gPowZiPowYi[i], signerID[i]);
         chaumPedersonZKP.generateZKP(p, q, g,
                 r.getgPowYi().get(cID),
                 r.getYi().get(cID),
@@ -187,11 +142,8 @@ public class SPEKEPlusNetwork {
                 gPowZiPowYi,
                 signerID);
 
-//            chaumPedersonZKPi[i][0] = chaumPedersonZKP.getGPowS();
         chaumPedersonZKPi.add(chaumPedersonZKP.getGPowS());
-//            chaumPedersonZKPi[i][1] = chaumPedersonZKP.getGPowZPowS();
         chaumPedersonZKPi.add(chaumPedersonZKP.getGPowZPowS());
-//            chaumPedersonZKPi[i][2] = chaumPedersonZKP.getT();
         chaumPedersonZKPi.add(chaumPedersonZKP.getT());
 
         // Compute pairwise keys
@@ -201,64 +153,44 @@ public class SPEKEPlusNetwork {
                 continue;
             }
 
-//            BigInteger rawKey = gsPowXi[j].modPow(xi[i], p);
             BigInteger rawKey = r.getGsPowXi().get(jID).modPow(r.getXi().get(cID), p);
-//            pairwiseKeysMAC[i][j] = getSHA256(rawKey, "MAC");
             pairwiseKeysMAC.put(jID, getSHA256(rawKey, "MAC"));
-//            pairwiseKeysKC[i][j] = getSHA256(rawKey, "KC");
             pairwiseKeysKC.put(jID, getSHA256(rawKey, "KC"));
 
             String hmacName = "HMac-SHA256";
 
             try {
                 // Compute HMAC for message authentication
-//                SecretKey key = new SecretKeySpec(pairwiseKeysMAC[i][j].toByteArray(), hmacName);
                 SecretKey key = new SecretKeySpec(pairwiseKeysMAC.get(jID).toByteArray(), hmacName);
 
                 Mac mac = Mac.getInstance(hmacName);
                 mac.init(key);
                 mac.reset();
-//                mac.update(gPowYi[i].toByteArray());
                 mac.update(r.getgPowYi().get(cID).toByteArray());
-//                mac.update(schnorrZKPi[i][0].toByteArray());
                 mac.update(r.getSchnorrZKPi().get(cID).get(0).toByteArray());
-//                mac.update(schnorrZKPi[i][1].toByteArray());
                 mac.update(r.getSchnorrZKPi().get(cID).get(1).toByteArray());
-//                mac.update(gPowZiPowYi[i].toByteArray());
                 mac.update(gPowZiPowYi.toByteArray());
-//                mac.update(chaumPedersonZKPi[i][0].toByteArray());
                 mac.update(chaumPedersonZKPi.get(0).toByteArray());
-//                mac.update(chaumPedersonZKPi[i][1].toByteArray());
                 mac.update(chaumPedersonZKPi.get(1).toByteArray());
-//                mac.update(chaumPedersonZKPi[i][2].toByteArray());
                 mac.update(chaumPedersonZKPi.get(2).toByteArray());
 
-//                hMacsMAC[i][j] = new BigInteger(mac.doFinal());
                 hMacsMAC.put(jID, new BigInteger(mac.doFinal()));
                 // Compute HMAC for key confirmation
-//                key = new SecretKeySpec(pairwiseKeysKC[i][j].toByteArray(), hmacName);
                 key = new SecretKeySpec(pairwiseKeysKC.get(jID).toByteArray(), hmacName);
                 mac.reset();
                 mac.init(key);
                 mac.update("KC".getBytes());
-//                mac.update(new BigInteger(""+i).toByteArray());
                 mac.update(new BigInteger(""+cID).toByteArray());
-//                mac.update(new BigInteger(""+j).toByteArray());
                 mac.update(new BigInteger(""+jID).toByteArray());
-//                mac.update(gsPowXi[i].toByteArray());
                 mac.update(r.getGsPowXi().get(cID).toByteArray());
-//                mac.update(gsPowXi[j].toByteArray());
                 mac.update(r.getGsPowXi().get(jID).toByteArray());
-//                hMacsKC[i][j] = new BigInteger(mac.doFinal());
                 hMacsKC.put(jID, new BigInteger(mac.doFinal()));
-            }catch(Exception e){
-
+            } catch(Exception e){
                 e.printStackTrace();
                 System.exit(0);
 
             }
         }
-//        }
         SpekeRoundTwo roundTwo = new SpekeRoundTwo();
         roundTwo.setChaumPedersonZKPi(chaumPedersonZKPi);
         roundTwo.setgPowZiPowYi(gPowZiPowYi);
@@ -274,7 +206,6 @@ public class SPEKEPlusNetwork {
         Log.d("speke",  "*********** VERIFY ROUND 2 ***********");
         // Verifying data in Round 2
         long cID = Long.parseLong(signerID);
-        // ith participant
         for (int j=0; j<n; j++) {
             long jID = Long.parseLong(r1.getSignerID().get(j));
             // check ZKP - except ith
@@ -282,8 +213,6 @@ public class SPEKEPlusNetwork {
                 continue;
             }
 
-//            if (!verifyChaumPedersonZKP(p, q, g, gPowYi[j], gPowZi[j], gPowZiPowYi[j],
-//                    chaumPedersonZKPi[j][0], chaumPedersonZKPi[j][1], chaumPedersonZKPi[j][2], signerID[j])) {
             if(!verifyChaumPedersonZKP(p, q, g, r1.getgPowYi().get(jID),
                     r1.getgPowZi().get(jID),
                     r2.getgPowZiPowYi().get(jID),
@@ -302,7 +231,6 @@ public class SPEKEPlusNetwork {
                 continue;
             }
 
-//            SecretKey key = new SecretKeySpec(pairwiseKeysKC[i][j].toByteArray(), hmacName);
             SecretKey key = new SecretKeySpec(r2.getPairwiseKeysKC().get(cID).get(jID).toByteArray(), hmacName);
 
             try {
@@ -310,15 +238,10 @@ public class SPEKEPlusNetwork {
                 mac.init(key);
 
                 mac.update("KC".getBytes());
-//                mac.update(new BigInteger(""+j).toByteArray());
                 mac.update(new BigInteger(""+jID).toByteArray());
-//                mac.update(new BigInteger(""+i).toByteArray());
                 mac.update(new BigInteger(""+cID).toByteArray());
-//                mac.update(gsPowXi[j].toByteArray());
                 mac.update(r1.getGsPowXi().get(jID).toByteArray());
-//                mac.update(gsPowXi[i].toByteArray());
                 mac.update(r1.getGsPowXi().get(cID).toByteArray());
-//                if (new BigInteger(mac.doFinal()).compareTo(hMacsKC[j][i]) != 0) {
                 if (new BigInteger(mac.doFinal()).compareTo(r2.gethMacsKC().get(jID).get(cID)) != 0) {
                     Log.d("speke",  "Round 2 verification failed at checking KC for (i,j)=("+cID+","+jID+")");
                     return false;
@@ -336,42 +259,29 @@ public class SPEKEPlusNetwork {
                 continue;
             }
 
-//            key = new SecretKeySpec(pairwiseKeysMAC[i][j].toByteArray(), hmacName);
             key = new SecretKeySpec(r2.getPairwiseKeysMAC().get(cID).get(jID).toByteArray(), hmacName);
             try {
                 Mac mac = Mac.getInstance(hmacName);
                 mac.init(key);
                 mac.reset();
-//                mac.update(gPowYi[j].toByteArray());
                 mac.update(r1.getgPowYi().get(jID).toByteArray());
-//                mac.update(schnorrZKPi[j][0].toByteArray());
                 mac.update(r1.getSchnorrZKPi().get(jID).get(0).toByteArray());
-//                mac.update(schnorrZKPi[j][1].toByteArray());
                 mac.update(r1.getSchnorrZKPi().get(jID).get(1).toByteArray());
-//                mac.update(gPowZiPowYi[j].toByteArray());
                 mac.update(r2.getgPowZiPowYi().get(jID).toByteArray());
-//                mac.update(chaumPedersonZKPi[j][0].toByteArray());
                 mac.update(r2.getChaumPedersonZKPi().get(jID).get(0).toByteArray());
-//                mac.update(chaumPedersonZKPi[j][1].toByteArray());
                 mac.update(r2.getChaumPedersonZKPi().get(jID).get(1).toByteArray());
-//                mac.update(chaumPedersonZKPi[j][2].toByteArray());
                 mac.update(r2.getChaumPedersonZKPi().get(jID).get(2).toByteArray());
 
-//                if (new BigInteger(mac.doFinal()).compareTo(hMacsMAC[j][i]) != 0) {
                 if (new BigInteger(mac.doFinal()).compareTo(r2.gethMacsMAC().get(jID).get(cID)) != 0) {
                     Log.d("speke",  "Round 2 verification failed at checking MACs for (i,j)=("+cID+","+jID+")");
                     return false;
-
                 }
             }catch(Exception e){
-
                 e.printStackTrace();
                 System.exit(0);
-
             }
         }
         return true;
-
     }
 
     public BigInteger computeKeys(SpekeRoundOneResponse r1, SpekeRoundTwoResponse r2) {
@@ -383,14 +293,12 @@ public class SPEKEPlusNetwork {
 
             // ith participant
             int cyclicIndex = getCyclicIndex(i-1, n);
-//            BigInteger firstTerm = gPowYi[getCyclicIndex(i-1,n)].modPow( yi[i].multiply(BigInteger.valueOf(n)), p);
             BigInteger firstTerm = r1.getgPowYi().get(Long.parseLong(r1.getSignerID().get(cyclicIndex)))
                     .modPow(r1.getYi().get(iID).multiply(BigInteger.valueOf(n)), p);
             BigInteger finalTerm = firstTerm;
 
             for (int j=0; j<(n-1) ; j++){
                 cyclicIndex = getCyclicIndex(i+j, n);
-//                BigInteger interTerm = gPowZiPowYi[getCyclicIndex(i+j, n)].modPow(BigInteger.valueOf(n-1-j), p);
                 BigInteger interTerm = r2.getgPowZiPowYi().get(Long.parseLong(r1.getSignerID().get(cyclicIndex)))
                         .modPow(BigInteger.valueOf(n-1-j), p);
                 finalTerm = finalTerm.multiply(interTerm).mod(p);
@@ -400,12 +308,9 @@ public class SPEKEPlusNetwork {
         }
 
         for (int i=0; i<n; i++) {
-
             Log.d("speke",  "Session key " + i + ": " + multipleSessionKeys.get(Long.parseLong(r1.getSignerID().get(i))).toString(16));
-
         }
         return multipleSessionKeys.get(cID);
-
     }
 
     public int getCyclicIndex (int i, int n){

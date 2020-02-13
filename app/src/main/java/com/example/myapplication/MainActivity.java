@@ -1,9 +1,10 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
-
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -34,11 +35,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Button buttonSend = (Button) findViewById(R.id.btn_send);
         Button buttonConnect = (Button) findViewById(R.id.btn_connect);
+        FloatingActionButton buttonSettings = (FloatingActionButton) findViewById(R.id.btn_settings);
         mEditTextSendMessage = (EditText) findViewById(R.id.edt_send_message);
         mTextViewReplyFromServer = (TextView) findViewById(R.id.tv_reply_from_server);
 
         buttonSend.setOnClickListener(this);
         buttonConnect.setOnClickListener(this);
+        buttonSettings.setOnClickListener(this);
 
     }
 
@@ -56,8 +59,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d("button", "connect button pressed");
                 Button btn = (Button) findViewById(R.id.btn_connect);
                 btn.setEnabled(false);
-                new JPAKEPlus((Button) findViewById(R.id.btn_connect)).execute((Button) findViewById(R.id.btn_connect));
+                new SPEKEPlus((Button) findViewById(R.id.btn_connect)).execute((Button) findViewById(R.id.btn_connect));
                 break;
+            case R.id.btn_settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+
         }
     }
 
@@ -75,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 try {
                     //Replace below IP with the IP of that device in which server socket open.
                     //If you change port then change the port number in the server side code also.
-                    Socket s = new Socket("192.168.0.25", 9001);
+                    Socket s = new Socket("192.168.0.25", 8080);
 
                     OutputStream out = s.getOutputStream();
 

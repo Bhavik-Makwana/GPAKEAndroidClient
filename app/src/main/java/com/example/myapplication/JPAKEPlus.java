@@ -119,7 +119,7 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
         try {
             Log.d("connect", "SERVER");
             String serverAddress = "192.168.0.25";
-            Socket socket = new Socket(serverAddress, 9001);
+            Socket socket = new Socket(serverAddress, 8080);
             in = new BufferedReader(new InputStreamReader(
                     socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);

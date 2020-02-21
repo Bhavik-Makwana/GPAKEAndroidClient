@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d("button", "connect button pressed");
                 Button btn = (Button) findViewById(R.id.btn_connect);
                 btn.setEnabled(false);
-                new SPEKEPlus((Button) findViewById(R.id.btn_connect)).execute((Button) findViewById(R.id.btn_connect));
+                new JPAKEPlusEC((Button) findViewById(R.id.btn_connect)).execute((Button) findViewById(R.id.btn_connect));
                 break;
             case R.id.btn_settings:
                 Intent intent = new Intent(this, SettingsActivity.class);

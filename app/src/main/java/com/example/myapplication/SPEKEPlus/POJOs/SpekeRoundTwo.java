@@ -1,37 +1,32 @@
-package com.example.myapplication.EllipticCurvePOJOs;
-
-import com.example.myapplication.ZeroKnowledgeProofs.ChaumPedersonZKP;
+package com.example.myapplication.SPEKEPlus.POJOs;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ECRoundThree {
-    byte[] gPowZiPowYi;
-    //    BigInteger [][] chaumPedersonZKPi = new BigInteger [n][3]; // {g^s, (g^z)^s, t}
-    ChaumPedersonZKP chaumPedersonZKPi = new ChaumPedersonZKP();
-    //    BigInteger [][] pairwiseKeysMAC = new BigInteger [n][n];
-    HashMap<Long, BigInteger> pairwiseKeysMAC = new HashMap<>();
-    //    BigInteger [][] pairwiseKeysKC = new BigInteger [n][n];
-    HashMap<Long, BigInteger> pairwiseKeysKC = new HashMap<>();
-    //    BigInteger [][] hMacsMAC = new BigInteger [n][n];
-    HashMap<Long, BigInteger> hMacsMAC = new HashMap<>();
-    //    BigInteger [][] hMacsKC = new BigInteger [n][n];
-    HashMap<Long, BigInteger> hMacsKC = new HashMap<>();
+public class SpekeRoundTwo {
+    private BigInteger gPowZiPowYi;
+    private ArrayList<BigInteger> chaumPedersonZKPi = new ArrayList<>();
+    private HashMap<Long, BigInteger> pairwiseKeysMAC = new HashMap<>();
+    private HashMap<Long, BigInteger> pairwiseKeysKC = new HashMap<>();
+    private HashMap<Long, BigInteger> hMacsMAC = new HashMap<>();
+    private HashMap<Long, BigInteger> hMacsKC = new HashMap<>();
 
-    public byte[] getgPowZiPowYi() {
+    public SpekeRoundTwo() {}
+
+    public BigInteger getgPowZiPowYi() {
         return gPowZiPowYi;
     }
 
-    public void setgPowZiPowYi(byte[] gPowZiPowYi) {
+    public void setgPowZiPowYi(BigInteger gPowZiPowYi) {
         this.gPowZiPowYi = gPowZiPowYi;
     }
 
-    public ChaumPedersonZKP getChaumPedersonZKPi() {
+    public ArrayList<BigInteger> getChaumPedersonZKPi() {
         return chaumPedersonZKPi;
     }
 
-    public void setChaumPedersonZKPi(ChaumPedersonZKP chaumPedersonZKPi) {
+    public void setChaumPedersonZKPi(ArrayList<BigInteger> chaumPedersonZKPi) {
         this.chaumPedersonZKPi = chaumPedersonZKPi;
     }
 

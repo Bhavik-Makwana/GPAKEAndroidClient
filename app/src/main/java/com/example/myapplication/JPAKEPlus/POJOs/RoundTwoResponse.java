@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.JPAKEPlus.POJOs;
 
 import java.math.BigInteger;
 import java.util.ArrayList;

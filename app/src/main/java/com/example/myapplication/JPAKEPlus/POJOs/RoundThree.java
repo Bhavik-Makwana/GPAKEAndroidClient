@@ -1,18 +1,18 @@
-package com.example.myapplication;
+package com.example.myapplication.JPAKEPlus.POJOs;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SpekeRoundTwo {
-    private BigInteger gPowZiPowYi;
-    private ArrayList<BigInteger> chaumPedersonZKPi = new ArrayList<>();
-    private HashMap<Long, BigInteger> pairwiseKeysMAC = new HashMap<>();
-    private HashMap<Long, BigInteger> pairwiseKeysKC = new HashMap<>();
-    private HashMap<Long, BigInteger> hMacsMAC = new HashMap<>();
-    private HashMap<Long, BigInteger> hMacsKC = new HashMap<>();
+public class RoundThree {
+    BigInteger gPowZiPowYi;
+    ArrayList<BigInteger> chaumPedersonZKPi = new ArrayList<>();
+    HashMap<Long, BigInteger> pairwiseKeysMAC = new HashMap<>();
+    HashMap<Long, BigInteger> pairwiseKeysKC = new HashMap<>();
+    HashMap<Long, BigInteger> hMacsMAC = new HashMap<>();
+    HashMap<Long, BigInteger> hMacsKC = new HashMap<>();
 
-    public SpekeRoundTwo() {}
+    public RoundThree(){};
 
     public BigInteger getgPowZiPowYi() {
         return gPowZiPowYi;
@@ -62,3 +62,4 @@ public class SpekeRoundTwo {
         this.hMacsKC = hMacsKC;
     }
 }
+

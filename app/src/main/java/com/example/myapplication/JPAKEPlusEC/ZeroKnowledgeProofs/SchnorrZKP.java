@@ -1,4 +1,4 @@
-package com.example.myapplication.ZeroKnowledgeProofs;
+package com.example.myapplication.JPAKEPlusEC.ZeroKnowledgeProofs;
 
 import org.bouncycastle.math.ec.ECPoint;
 

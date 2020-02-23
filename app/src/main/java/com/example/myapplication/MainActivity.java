@@ -4,6 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.myapplication.JPAKEPlus.JPAKEPlus;
+import com.example.myapplication.JPAKEPlusEC.JPAKEPlusEC;
+import com.example.myapplication.SPEKEPlus.SPEKEPlus;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import android.util.Log;
 import android.view.View;
@@ -34,13 +38,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         Button buttonSend = (Button) findViewById(R.id.btn_send);
-        Button buttonConnect = (Button) findViewById(R.id.btn_connect);
+        Button buttonConnectJPAKEPlus = (Button) findViewById(R.id.btn_connect_jpake);
+        Button buttonConnectSPEKEPlus = (Button) findViewById(R.id.btn_connect_speke);
+        Button buttonConnectECJPAKEPlus = (Button) findViewById(R.id.btn_connect_EC);
         FloatingActionButton buttonSettings = (FloatingActionButton) findViewById(R.id.btn_settings);
         mEditTextSendMessage = (EditText) findViewById(R.id.edt_send_message);
         mTextViewReplyFromServer = (TextView) findViewById(R.id.tv_reply_from_server);
 
         buttonSend.setOnClickListener(this);
-        buttonConnect.setOnClickListener(this);
+        buttonConnectJPAKEPlus.setOnClickListener(this);
+        buttonConnectSPEKEPlus.setOnClickListener(this);
+        buttonConnectECJPAKEPlus.setOnClickListener(this);
         buttonSettings.setOnClickListener(this);
 
     }
@@ -48,6 +56,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         Log.d("button", "print test 2");
+        Button ECBtn = (Button) findViewById(R.id.btn_connect_EC);
+        Button jpakeBtn = (Button) findViewById(R.id.btn_connect_jpake);
+        Button spekeBtn = (Button) findViewById(R.id.btn_connect_speke);
+
         switch (v.getId()) {
 
             case R.id.btn_send:
@@ -55,11 +67,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d("button", mEditTextSendMessage.getText().toString());
                 sendMessage(mEditTextSendMessage.getText().toString());
                 break;
-            case R.id.btn_connect:
+            case R.id.btn_connect_EC:
                 Log.d("button", "connect button pressed");
-                Button btn = (Button) findViewById(R.id.btn_connect);
-                btn.setEnabled(false);
-                new JPAKEPlusEC((Button) findViewById(R.id.btn_connect)).execute((Button) findViewById(R.id.btn_connect));
+                ECBtn.setEnabled(false);
+                jpakeBtn.setEnabled(false);
+                spekeBtn.setEnabled(false);
+                new JPAKEPlusEC(ECBtn, jpakeBtn, spekeBtn).execute((Button) findViewById(R.id.btn_connect_EC));
+
+                break;
+            case R.id.btn_connect_jpake:
+                Log.d("button", "connect button pressed");
+                jpakeBtn.setEnabled(false);
+                ECBtn.setEnabled(false);
+                spekeBtn.setEnabled(false);
+//                new JPAKEPlusEC((Button) findViewById(R.id.btn_connect)).execute((Button) findViewById(R.id.btn_connect));
+                new JPAKEPlus(jpakeBtn, ECBtn, spekeBtn).execute((Button) findViewById(R.id.btn_connect_jpake));
+                break;
+            case R.id.btn_connect_speke:
+                Log.d("button", "connect button pressed");
+                spekeBtn.setEnabled(false);
+                ECBtn.setEnabled(false);
+                jpakeBtn.setEnabled(false);
+//                new JPAKEPlusEC((Button) findViewById(R.id.btn_connect)).execute((Button) findViewById(R.id.btn_connect));
+                new SPEKEPlus(spekeBtn, jpakeBtn, ECBtn).execute((Button) findViewById(R.id.btn_connect_speke));
                 break;
             case R.id.btn_settings:
                 Intent intent = new Intent(this, SettingsActivity.class);

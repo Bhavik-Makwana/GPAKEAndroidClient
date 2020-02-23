@@ -1,9 +1,8 @@
-package com.example.myapplication.EllipticCurvePOJOs;
+package com.example.myapplication.JPAKEPlusEC.POJOs;
 
-import com.example.myapplication.ZeroKnowledgeProofs.SchnorrZKP;
+import com.example.myapplication.JPAKEPlusEC.ZeroKnowledgeProofs.SchnorrZKP;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ECRoundTwo {

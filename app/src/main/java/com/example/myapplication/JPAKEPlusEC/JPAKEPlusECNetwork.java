@@ -1,18 +1,23 @@
-package com.example.myapplication;
+package com.example.myapplication.JPAKEPlusEC;
 
 import android.util.Log;
 
-import java.io.Serializable;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
-import com.example.myapplication.EllipticCurvePOJOs.*;
-import com.example.myapplication.ZeroKnowledgeProofs.*;
-import com.google.gson.Gson;
+import com.example.myapplication.JPAKEPlusEC.POJOs.ECRoundOne;
+import com.example.myapplication.JPAKEPlusEC.POJOs.ECRoundOneResponse;
+import com.example.myapplication.JPAKEPlusEC.POJOs.ECRoundThree;
+import com.example.myapplication.JPAKEPlusEC.POJOs.ECRoundThreeResponse;
+import com.example.myapplication.JPAKEPlusEC.POJOs.ECRoundTwo;
+import com.example.myapplication.JPAKEPlusEC.POJOs.ECRoundTwoResponse;
+import com.example.myapplication.JPAKEPlusEC.ZeroKnowledgeProofs.*;
 //import org.bouncycastle.math.ec.ECPoint;
 
 import javax.crypto.Mac;
@@ -22,7 +27,6 @@ import javax.crypto.spec.SecretKeySpec;
 import org.bouncycastle.jce.ECNamedCurveTable;
 import org.bouncycastle.jce.spec.ECParameterSpec;
 import org.bouncycastle.math.ec.ECCurve;
-import org.bouncycastle.math.ec.ECFieldElement;
 import org.bouncycastle.math.ec.ECPoint;
 
 public class JPAKEPlusECNetwork {
@@ -45,7 +49,9 @@ public class JPAKEPlusECNetwork {
     BigInteger s;
 
     int clientId;
-
+    long startTime;
+    long endTime;
+    TreeMap<String, Long> time = new TreeMap<>();
     // *********************************** ROUND 1 ***********************************
     private HashMap<Long, BigInteger> aij = new HashMap<>();
     private HashMap<Long, byte[]> gPowAij = new HashMap<>();
@@ -89,7 +95,7 @@ public class JPAKEPlusECNetwork {
 
     ArrayList<Long> clients;
 
-    public JPAKEPlusECNetwork(String sStr, BigInteger p, BigInteger q, BigInteger g, int n, String id, ArrayList<Long> clients, int clientID) {
+    public JPAKEPlusECNetwork(String sStr, int n, String id, ArrayList<Long> clients, int clientID) {
         this.sStr = sStr;
 //        this.p = p;
 //        this.q = q;
@@ -103,8 +109,10 @@ public class JPAKEPlusECNetwork {
 
 
     public ECRoundOne roundOne() {
-        long cID = (long) clientId;
         Log.d("ec", "*************** ROUND 1 ***************");
+        startTime = System.currentTimeMillis();
+
+        long cID = (long) clientId;
         int n = clients.size();
 
         signerID = clientId + "";
@@ -165,14 +173,15 @@ public class JPAKEPlusECNetwork {
         dataObject.setSchnorrZKPyi(schnorrZKPyi);
         dataObject.setYi(yi);
         dataObject.setSignerID(signerID);
-
+        endTime = System.currentTimeMillis();
+        time.put("1) Latency of computing round 1 per participant (ms):", (endTime-startTime));
         return dataObject;
     }
 
     public boolean verifyRoundOne(ECRoundOneResponse r) {
-        // VERIFICATION
-        long cID = (long) clientId;
         Log.d("ec", "************ VERIFY ROUND 1 ***********");
+        startTime = System.currentTimeMillis();
+        long cID = (long) clientId;
         for (int i=0; i<n; i++) {
 
             int iPlusOne = (i==n-1) ? 0: i+1;
@@ -244,11 +253,15 @@ public class JPAKEPlusECNetwork {
                 return false;
             }
         }
+        endTime = System.currentTimeMillis();
+        time.put("2) Latency of verifying data in round 1 per participant (ms):", (endTime-startTime));
         return true;
     }
 
     public ECRoundTwo roundTwo(ECRoundOneResponse r) {
         Log.d("ec", "*************** ROUND 2 ***************");
+        startTime = System.currentTimeMillis();
+
         long cID = (long) clientId;
         // Each participant sends newGen^{bij * s} and ZKP{bij * s}
         for (int j=0; j<n; j++) {
@@ -298,12 +311,15 @@ public class JPAKEPlusECNetwork {
         data.setNewGenPowBijs(newGenPowBijs);
         data.setSchnorrZKPbijs(schnorrZKPbijs);
         data.setSignerID(signerID);
-
+        endTime = System.currentTimeMillis();
+        time.put("3) Latency of computing round 2 per participant (ms):", (endTime-startTime));
         return data;
     }
 
     public boolean verifyRoundTwo(ECRoundTwoResponse r) {
         Log.d("ec", "************ VERIFY ROUND 2 ***********");
+        startTime = System.currentTimeMillis();
+
         long cID = (long) clientId;
         //             each participant verifies ZKP{bijs}
         for (int j=0; j<n; j++) {
@@ -331,11 +347,15 @@ public class JPAKEPlusECNetwork {
 
 
         }
+        endTime = System.currentTimeMillis();
+        time.put("4) Latency of verifying round 2 per participant (ms):", (endTime-startTime));
         return true;
     }
 
     public ECRoundThree roundThree(ECRoundOneResponse r1, ECRoundTwoResponse r2) {
         Log.d("ec", "*************** ROUND 3 ***************");
+        startTime = System.currentTimeMillis();
+
         long cID = (long) clientId;
 //        gPowZiPowYi = r1.getgPowZi().get(cID).modPow(r1.getYi().get(cID), p);
         ECPoint zi = ecCurve.decodePoint(r1.getgPowZi().get(cID));
@@ -428,11 +448,16 @@ public class JPAKEPlusECNetwork {
         data.setPairwiseKeysKC(pairwiseKeysKC);
         data.setPairwiseKeysMAC(pairwiseKeysMAC);
 
+        endTime = System.currentTimeMillis();
+        time.put("5) Latency of computing round 3 per participant (ms):", (endTime-startTime));
+
         return data;
     }
 
     public boolean roundFour(ECRoundOneResponse r1, ECRoundTwoResponse r2, ECRoundThreeResponse r3) {
         Log.d("ec", "*************** ROUND 4 ***************");
+        startTime = System.currentTimeMillis();
+
         long cID = (long) clientId;
         // ith participant
         for (int j=0; j<n; j++) {
@@ -520,43 +545,49 @@ public class JPAKEPlusECNetwork {
 
             }
         }
+        endTime = System.currentTimeMillis();
+        time.put("6) Latency of verifying round 3 for participant (ms):", (endTime-startTime));
+        
         return true;
     }
 
     public BigInteger computeKey(ECRoundOneResponse r1, ECRoundThreeResponse r3) {
-        HashMap<Long, BigInteger> multipleSessionKeys = new HashMap<>();
         Log.d("ec", "*********** KEY COMPUTATION ***********");
-        for (int i=0; i<n; i++) {
-            long iID = clients.get(i);
-            // ith participant
+        startTime = System.currentTimeMillis();
 
-            int cyclicIndex = getCyclicIndex(i-1, n);
-            ECPoint gPowYiEC = ecCurve.decodePoint(r1.getgPowYi().get(clients.get(cyclicIndex)));
-            ECPoint firstTerm = gPowYiEC
-                    .multiply(r1.getYi().get(iID).multiply(BigInteger.valueOf(n)));
-            ECPoint finalTerm = firstTerm;
+        startTime = System.currentTimeMillis();
 
-            for (int j=0; j<(n-1) ; j++) {
-                cyclicIndex = getCyclicIndex(i+j, n);
-                ECPoint gPowZiPowYiEC = ecCurve.decodePoint(r3.getgPowZiPowYi().get(clients.get(cyclicIndex)));
-                ECPoint interTerm = gPowZiPowYiEC.multiply(BigInteger.valueOf(n-1-j));
-                finalTerm = finalTerm.add(interTerm);
-            }
+        int i = r1.getSignerID().indexOf(signerID);
+        long iID = clients.get(i);
 
-            multipleSessionKeys.put(clients.get(i), getSHA256(finalTerm));
-            sessionKeys =  getSHA256(finalTerm);
+        // ith participant
 
+        int cyclicIndex = getCyclicIndex(i-1, n);
+        ECPoint gPowYiEC = ecCurve.decodePoint(r1.getgPowYi().get(clients.get(cyclicIndex)));
+        ECPoint firstTerm = gPowYiEC
+                .multiply(r1.getYi().get(iID).multiply(BigInteger.valueOf(n)));
+        ECPoint finalTerm = firstTerm;
+
+        for (int j=0; j<(n-1) ; j++) {
+            cyclicIndex = getCyclicIndex(i+j, n);
+            ECPoint gPowZiPowYiEC = ecCurve.decodePoint(r3.getgPowZiPowYi().get(clients.get(cyclicIndex)));
+            ECPoint interTerm = gPowZiPowYiEC.multiply(BigInteger.valueOf(n-1-j));
+            finalTerm = finalTerm.add(interTerm);
         }
 
-        for (int i=0; i<n; i++) {
-
-            Log.d("ec", "Session key " + i + " for client " + clients.get(i) + ": " + multipleSessionKeys.get(clients.get(i)).toString(16));
-
-
-
-        }
-        return multipleSessionKeys.get((long) clientId);
+        BigInteger key = getSHA256(finalTerm);
+        endTime = System.currentTimeMillis();
+        time.put("7) Latency of computing key for participant (ms):", (endTime-startTime));
+        return key;
     }
+
+    public void displayLatency() {
+        System.out.println("\nLatency of Each Round JPAKE+\n");
+        for (Map.Entry<String, Long> e : time.entrySet()) {
+            Log.d("jpake", e.getKey() + e.getValue());
+        }
+    }
+
     public int getCyclicIndex (int i, int n){
 
         if (i<0){

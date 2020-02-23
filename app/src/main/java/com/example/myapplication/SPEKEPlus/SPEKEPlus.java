@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.SPEKEPlus;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,6 +7,11 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Button;
 
+import com.example.myapplication.RoundZero;
+import com.example.myapplication.SPEKEPlus.POJOs.SpekeRoundOne;
+import com.example.myapplication.SPEKEPlus.POJOs.SpekeRoundOneResponse;
+import com.example.myapplication.SPEKEPlus.POJOs.SpekeRoundTwo;
+import com.example.myapplication.SPEKEPlus.POJOs.SpekeRoundTwoResponse;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -32,14 +37,19 @@ public class SPEKEPlus extends AsyncTask<Button, Long, BigInteger>  {
     int clientId;
 
 
-    Button b;
-    public SPEKEPlus(Button b) {
+    Button b, b2, b3;
+
+    public SPEKEPlus(Button b, Button b2, Button b3) {
         this.b = b;
+        this.b2 = b2;
+        this.b3 = b3;
     }
     @Override
     protected void onPostExecute(BigInteger bs) {
         Log.d("speke", "DONE");
         b.setEnabled(true);
+        b2.setEnabled(true);
+        b3.setEnabled(true);
     }
 
     @Override

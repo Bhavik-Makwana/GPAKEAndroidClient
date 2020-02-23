@@ -1,19 +1,25 @@
-package com.example.myapplication;
+package com.example.myapplication.SPEKEPlus;
 
-import java.io.IOException;
 import java.math.BigInteger;
 
 import android.util.Log;
 
+import com.example.myapplication.SPEKEPlus.POJOs.SpekeRoundOne;
+import com.example.myapplication.SPEKEPlus.POJOs.SpekeRoundOneResponse;
+import com.example.myapplication.SPEKEPlus.POJOs.SpekeRoundTwo;
+import com.example.myapplication.SPEKEPlus.POJOs.SpekeRoundTwoResponse;
+
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.math.BigInteger;
+
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class SPEKEPlusNetwork {
     String sStr;
@@ -23,7 +29,9 @@ public class SPEKEPlusNetwork {
     int n;
     BigInteger bigTwo = new BigInteger("2", 16);
 
-
+    long startTime;
+    long endTime;
+    TreeMap<String, Long> time = new TreeMap<>();
 
     // **************************** ROUND 1 ****************************
     BigInteger xi;
@@ -54,6 +62,8 @@ public class SPEKEPlusNetwork {
     }
 
     public SpekeRoundOne roundOne() {
+        System.out.println("*************** ROUND 1 ***************");
+        startTime = System.currentTimeMillis();
         BigInteger gs = getSHA256(sStr);
         xi = org.bouncycastle.util.BigIntegers.createRandomInRange(BigInteger.ONE,
                 q.subtract(BigInteger.ONE), new SecureRandom());
@@ -75,11 +85,15 @@ public class SPEKEPlusNetwork {
         roundOne.setgPowZi(gPowZi);
         roundOne.setSchnorrZKPi(schnorrZKPi);
         roundOne.setSignerID(signerID);
+        endTime = System.currentTimeMillis();
+        time.put("1) Latency of computing round 1 for participant (ms):", (endTime-startTime));
         return roundOne;
 
     }
 
     public boolean verifyRoundOne(SpekeRoundOneResponse r) {
+        System.out.println("************ VERIFY ROUND 1 ***********");
+        startTime = System.currentTimeMillis();
         for (int i=0; i<n; i++) {
 
             int iPlusOne = (i==n-1) ? 0: i+1;
@@ -123,6 +137,8 @@ public class SPEKEPlusNetwork {
                 return false;
             }
         }
+        endTime = System.currentTimeMillis();
+        time.put("2) Latency of verifying round 1 for participant (ms):", (endTime-startTime));
         return true;
     }
 
@@ -130,6 +146,8 @@ public class SPEKEPlusNetwork {
         // Round 2: P_i sends A = {g^{y_i}, ZKP, (g^{z_i})^{y_i}, ZKP}, HMAC authentication tag,
         // HMAC key confirmation tag
         Log.d("speke",  "*********** ROUND 2 ***********");
+        startTime = System.currentTimeMillis();
+
         long cID = Long.parseLong(signerID);
 
         gPowZiPowYi = r.getgPowZi().get(cID).modPow(r.getYi().get(cID), p);
@@ -199,11 +217,15 @@ public class SPEKEPlusNetwork {
         roundTwo.setPairwiseKeysKC(pairwiseKeysKC);
         roundTwo.setPairwiseKeysMAC(pairwiseKeysMAC);
 
+        endTime = System.currentTimeMillis();
+        time.put("3) Latency of computing round 2 for participant (ms):", (endTime-startTime));
         return roundTwo;
     }
 
     public boolean verifyRoundTwo(SpekeRoundOneResponse r1, SpekeRoundTwoResponse r2) {
         Log.d("speke",  "*********** VERIFY ROUND 2 ***********");
+        startTime = System.currentTimeMillis();
+
         // Verifying data in Round 2
         long cID = Long.parseLong(signerID);
         for (int j=0; j<n; j++) {
@@ -281,10 +303,14 @@ public class SPEKEPlusNetwork {
                 System.exit(0);
             }
         }
+        endTime = System.currentTimeMillis();
+        time.put("4) Latency of verifying round 2 for participant (ms):", (endTime-startTime));
         return true;
     }
 
     public BigInteger computeKeys(SpekeRoundOneResponse r1, SpekeRoundTwoResponse r2) {
+        startTime = System.currentTimeMillis();
+
         Log.d("speke",  "*********** KEY COMPUTATION ***********");
         HashMap<Long, BigInteger> multipleSessionKeys = new HashMap<>();
         long cID = Long.parseLong(signerID);
@@ -310,7 +336,17 @@ public class SPEKEPlusNetwork {
         for (int i=0; i<n; i++) {
             Log.d("speke",  "Session key " + i + ": " + multipleSessionKeys.get(Long.parseLong(r1.getSignerID().get(i))).toString(16));
         }
+        endTime = System.currentTimeMillis();
+        time.put("5) Latency of key computation for participant (ms):", (endTime-startTime));
+        displayLatency();
         return multipleSessionKeys.get(cID);
+    }
+
+    public void displayLatency() {
+        System.out.println("\nLatency of Each Round JPAKE+\n");
+        for (Map.Entry<String, Long> e : time.entrySet()) {
+            Log.d("jpake", e.getKey() + e.getValue());
+        }
     }
 
     public int getCyclicIndex (int i, int n){

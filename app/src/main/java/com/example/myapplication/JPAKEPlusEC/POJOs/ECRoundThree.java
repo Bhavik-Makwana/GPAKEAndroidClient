@@ -1,32 +1,31 @@
-package com.example.myapplication;
+package com.example.myapplication.JPAKEPlusEC.POJOs;
+
+import com.example.myapplication.JPAKEPlusEC.ZeroKnowledgeProofs.ChaumPedersonZKP;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.HashMap;
 
-public class RoundThree {
-    BigInteger gPowZiPowYi;
-    ArrayList<BigInteger> chaumPedersonZKPi = new ArrayList<>();
+public class ECRoundThree {
+    byte[] gPowZiPowYi;
+    ChaumPedersonZKP chaumPedersonZKPi = new ChaumPedersonZKP();
     HashMap<Long, BigInteger> pairwiseKeysMAC = new HashMap<>();
     HashMap<Long, BigInteger> pairwiseKeysKC = new HashMap<>();
     HashMap<Long, BigInteger> hMacsMAC = new HashMap<>();
     HashMap<Long, BigInteger> hMacsKC = new HashMap<>();
 
-    public RoundThree(){};
-
-    public BigInteger getgPowZiPowYi() {
+    public byte[] getgPowZiPowYi() {
         return gPowZiPowYi;
     }
 
-    public void setgPowZiPowYi(BigInteger gPowZiPowYi) {
+    public void setgPowZiPowYi(byte[] gPowZiPowYi) {
         this.gPowZiPowYi = gPowZiPowYi;
     }
 
-    public ArrayList<BigInteger> getChaumPedersonZKPi() {
+    public ChaumPedersonZKP getChaumPedersonZKPi() {
         return chaumPedersonZKPi;
     }
 
-    public void setChaumPedersonZKPi(ArrayList<BigInteger> chaumPedersonZKPi) {
+    public void setChaumPedersonZKPi(ChaumPedersonZKP chaumPedersonZKPi) {
         this.chaumPedersonZKPi = chaumPedersonZKPi;
     }
 
@@ -62,4 +61,3 @@ public class RoundThree {
         this.hMacsKC = hMacsKC;
     }
 }
-

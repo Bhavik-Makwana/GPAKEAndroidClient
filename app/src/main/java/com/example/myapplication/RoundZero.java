@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class RoundZero {
     private ArrayList<Long> clientIDs = new ArrayList<>();
 
-    RoundZero() {};
+    public RoundZero() {};
 
     public ArrayList<Long> getClientIDs() {
         return clientIDs;

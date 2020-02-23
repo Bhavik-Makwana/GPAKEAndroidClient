@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.JPAKEPlus.POJOs;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ public class RoundTwo {
 
     private String signerID;
 
-    RoundTwo() {};
+    public RoundTwo() {};
 
     public HashMap<Long, BigInteger> getNewGen() {
         return newGen;

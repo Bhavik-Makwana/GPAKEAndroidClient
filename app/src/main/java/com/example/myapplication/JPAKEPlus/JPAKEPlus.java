@@ -1,12 +1,16 @@
-package com.example.myapplication;
+package com.example.myapplication.JPAKEPlus;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
+import com.example.myapplication.JPAKEPlus.POJOs.RoundOne;
+import com.example.myapplication.JPAKEPlus.POJOs.RoundOneResponse;
+import com.example.myapplication.JPAKEPlus.POJOs.RoundThree;
+import com.example.myapplication.JPAKEPlus.POJOs.RoundThreeResponse;
+import com.example.myapplication.JPAKEPlus.POJOs.RoundTwo;
+import com.example.myapplication.JPAKEPlus.POJOs.RoundTwoResponse;
+import com.example.myapplication.RoundZero;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -21,21 +25,12 @@ import java.security.SecureRandom;
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
-import java.io.*;
-
-import java.math.BigInteger;
-import java.net.Socket;
-import java.nio.ByteBuffer;
-import java.security.MessageDigest;
-import java.security.SecureRandom;
-import java.security.Security;
-import java.util.ArrayList;
-import java.util.HashMap;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import com.google.gson.Gson;
 
 
 public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
@@ -53,65 +48,51 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
     BigInteger s = getSHA256(sStr);
     int clientId;
 
+    long startTime;
+    long endTime;
+    TreeMap<String, Long> time = new TreeMap<>();
     // ROUND 1
-    //    BigInteger [][] aij = new BigInteger [n][n];
     HashMap<Long, BigInteger> aij = new HashMap<>();
-    //    BigInteger [][] gPowAij = new BigInteger [n][n];
     HashMap<Long, BigInteger> gPowAij = new HashMap<>();
-    //    BigInteger [][][] schnorrZKPaij = new BigInteger [n][n][2];
     HashMap<Long, ArrayList<BigInteger>> schnorrZKPaij = new HashMap<>();
-    //    BigInteger [][] bij = new BigInteger [n][n];
     HashMap<Long, BigInteger> bij = new HashMap<>();
-    //    BigInteger [][] gPowBij = new BigInteger [n][n];
     HashMap<Long, BigInteger>  gPowBij = new HashMap<>();
-    //    BigInteger [][][] schnorrZKPbij = new BigInteger [n][n][2];
     HashMap<Long, ArrayList<BigInteger>> schnorrZKPbij = new HashMap<>();
-    //    BigInteger [] yi = new BigInteger [n];
     BigInteger yi;
-    //    BigInteger [] gPowYi = new BigInteger [n];
     BigInteger gPowYi;
-    //    BigInteger [] gPowZi = new BigInteger [n];
     BigInteger gPowZi;
-    //    BigInteger [][] schnorrZKPyi = new BigInteger [n][2]; // {g^v, r}
     ArrayList<BigInteger> schnorrZKPyi = new ArrayList<>();
-    //    String [] signerID = new String [n];
     String signerID;
     SchnorrZKP schnorrZKP = new SchnorrZKP();
 
     // *********************************** ROUND 2 ***********************************
-//    BigInteger [][] newGen = new BigInteger [n][n];
     HashMap<Long, BigInteger> newGen = new HashMap<>();
-    //    BigInteger [][] bijs = new BigInteger [n][n];
     HashMap<Long, BigInteger> bijs = new HashMap<>();
-    //    BigInteger [][] newGenPowBijs = new BigInteger [n][n];
     HashMap<Long, BigInteger> newGenPowBijs = new HashMap<>();;
-    //    BigInteger [][][] schnorrZKPbijs = new BigInteger [n][n][2];
     HashMap<Long, ArrayList<BigInteger>> schnorrZKPbijs = new HashMap<>();
 
     // *********************************** ROUND 3 ***********************************
-//    BigInteger [] gPowZiPowYi = new BigInteger [n];
     BigInteger gPowZiPowYi;
-    //    BigInteger [][] chaumPedersonZKPi = new BigInteger [n][3]; // {g^s, (g^z)^s, t}
     ArrayList<BigInteger> chaumPedersonZKPi = new ArrayList<>();
-    //    BigInteger [][] pairwiseKeysMAC = new BigInteger [n][n];
     HashMap<Long, BigInteger> pairwiseKeysMAC = new HashMap<>();
-    //    BigInteger [][] pairwiseKeysKC = new BigInteger [n][n];
     HashMap<Long, BigInteger> pairwiseKeysKC = new HashMap<>();
-    //    BigInteger [][] hMacsMAC = new BigInteger [n][n];
     HashMap<Long, BigInteger> hMacsMAC = new HashMap<>();
-    //    BigInteger [][] hMacsKC = new BigInteger [n][n];
     HashMap<Long, BigInteger> hMacsKC = new HashMap<>();
     //   ************************************ KEYS ************************************
     BigInteger sessionKeys;
-    Button b;
-    public JPAKEPlus(Button b) {
+    Button b, b2, b3;
+    public JPAKEPlus(Button b, Button b2, Button b3) {
         this.b = b;
+        this.b2 = b2;
+        this.b3 = b3;
     }
 
     @Override
     protected void onPostExecute(Long bs) {
         Log.d("jpake", "DONE");
         b.setEnabled(true);
+        b2.setEnabled(true);
+        b3.setEnabled(true);
     }
 
     @Override
@@ -166,6 +147,8 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
             long cID = (long) clientId;
             clients = roundZero.getClientIDs();
             Log.d("JPAKE", "*************** ROUND 1 ***************");
+            startTime = System.currentTimeMillis();
+
             int n = clients.size();
 
             // signerId[i] = i + ""
@@ -226,6 +209,9 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
             dataObject.setSchnorrZKPyi(schnorrZKPyi);
             dataObject.setYi(yi);
             dataObject.setSignerID(signerID);
+
+            endTime = System.currentTimeMillis();
+            time.put("1) Latency of computing round 1 per participant (ms):", (endTime-startTime));
             data = gson.toJson(dataObject);
             out.println(data);
             response = in.readLine();
@@ -234,6 +220,8 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
 
             // VERIFICATION
             Log.d("JPAKE", "************ VERIFY ROUND 1 ***********");
+            startTime = System.currentTimeMillis();
+
             for (int i=0; i<n; i++) {
 
                 int iPlusOne = (i==n-1) ? 0: i+1;
@@ -299,7 +287,8 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
                 }
             }
 
-
+            endTime = System.currentTimeMillis();
+            time.put("2) Latency of verifying data in round 1 per participant (ms):", (endTime-startTime));
             // send confirmation to server
             out.println("1");
             // server can issue go ahead of next stage
@@ -310,6 +299,7 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
 
 
             Log.d("JPAKE", "*************** ROUND 2 ***************");
+            startTime = System.currentTimeMillis();
 
             // Each participant sends newGen^{bij * s} and ZKP{bij * s}
             for (int j=0; j<n; j++) {
@@ -344,6 +334,10 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
             dataRoundTwo.setNewGenPowBijs(newGenPowBijs);
             dataRoundTwo.setSchnorrZKPbijs(schnorrZKPbijs);
             dataRoundTwo.setSignerID(signerID);
+
+            endTime = System.currentTimeMillis();
+            time.put("3) Latency of computing round 2 per participant (ms):", (endTime-startTime));
+
             // send serialized round two data to server
             out.println(gson.toJson(dataRoundTwo));
             // get serialized json of all round 2 calculations
@@ -352,6 +346,7 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
 
 
             Log.d("JPAKE", "************ VERIFY ROUND 2 ***********");
+            startTime = System.currentTimeMillis();
 
             //             each participant verifies ZKP{bijs}
             for (int j=0; j<n; j++) {
@@ -370,7 +365,8 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
                     exitWithError("Round 2 verification failed at checking SchnorrZKP for bij. (i,j)="+"(" + clientId + "," + jID + ")");
             }
 
-
+            endTime = System.currentTimeMillis();
+            time.put("4) Latency of verifying round 2 per participant (ms):", (endTime-startTime));
             // send confirmation to server
             out.println("1");
             // server can issue go ahead of next stage
@@ -468,13 +464,17 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
             roundThree.sethMacsMAC(hMacsMAC);
             roundThree.setPairwiseKeysKC(pairwiseKeysKC);
             roundThree.setPairwiseKeysMAC(pairwiseKeysMAC);
-            out.println(gson.toJson(roundThree));
 
+            endTime = System.currentTimeMillis();
+            time.put("5) Latency of computing round 3 per participant (ms):", (endTime-startTime));
+
+            out.println(gson.toJson(roundThree));
             response = in.readLine();
             RoundThreeResponse rThreeResponse= gson.fromJson(response, RoundThreeResponse.class);
 
 
             Log.d("JPAKE", "*************** ROUND 4 ***************");
+            startTime = System.currentTimeMillis();
 
             // ith participant
             for (int j=0; j<n; j++) {
@@ -561,7 +561,8 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
                 }
             }
 
-
+            endTime = System.currentTimeMillis();
+            time.put("6) Latency of verifying round 3 for participant (ms):", (endTime-startTime));
             // send confirmation to server
             out.println("1");
             // server can issue go ahead of next stage
@@ -573,8 +574,11 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
 
             HashMap<Long, BigInteger> multipleSessionKeys = new HashMap<>();
             Log.d("JPAKE", "*********** KEY COMPUTATION ***********");
-            for (int i=0; i<n; i++) {
-                long iID = clients.get(i);
+            startTime = System.currentTimeMillis();
+
+//            for (int i=0; i<n; i++) {
+            long iID = Long.parseLong(signerID);
+            int i = rOneResponse.getSignerID().indexOf(signerID);
                 // ith participant
                 int cyclicIndex = getCyclicIndex(i-1, n);
                 BigInteger firstTerm = rOneResponse.getgPowYi().get(clients.get(cyclicIndex))
@@ -591,19 +595,30 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
                 multipleSessionKeys.put(clients.get(i), getSHA256(finalTerm));
                 sessionKeys =  getSHA256(finalTerm);
 
-            }
+//            }
 
-            for (int i=0; i<n; i++) {
-                Log.d("JPAKE", "Session key " + i + " for client " + clients.get(i) + ": " + multipleSessionKeys.get(clients.get(i)).toString(16));
-            }
+//            for (int i=0; i<n; i++) {
+//                Log.d("JPAKE", "Session key " + i + " for client " + clients.get(i) + ": " + multipleSessionKeys.get(clients.get(i)).toString(16));
+//            }
 
+            BigInteger key = getSHA256(finalTerm);
+
+            endTime = System.currentTimeMillis();
+            time.put("7) Latency of computing key for participant (ms):", (endTime-startTime));
             out.println("1");
         }
         catch (IOException e) {
             e.printStackTrace();
         }
-
+        displayLatency();
         return (long) 1;
+    }
+
+    public void displayLatency() {
+        System.out.println("\nLatency of Each Round JPAKE+\n");
+        for (Map.Entry<String, Long> e : time.entrySet()) {
+            Log.d("jpake", e.getKey() + e.getValue());
+        }
     }
 
     public int getCyclicIndex (int i, int n){

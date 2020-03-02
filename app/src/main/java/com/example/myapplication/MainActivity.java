@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 try {
                     //Replace below IP with the IP of that device in which server socket open.
                     //If you change port then change the port number in the server side code also.
-                    Socket s = new Socket("192.168.0.25", 8080);
+                    Socket s = new Socket("172.31.234.166", 8080);
 
                     OutputStream out = s.getOutputStream();
 

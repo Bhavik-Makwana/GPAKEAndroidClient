@@ -547,7 +547,7 @@ public class JPAKEPlusECNetwork {
         }
         endTime = System.currentTimeMillis();
         time.put("6) Latency of verifying round 3 for participant (ms):", (endTime-startTime));
-        
+
         return true;
     }
 
@@ -578,6 +578,7 @@ public class JPAKEPlusECNetwork {
         BigInteger key = getSHA256(finalTerm);
         endTime = System.currentTimeMillis();
         time.put("7) Latency of computing key for participant (ms):", (endTime-startTime));
+        displayLatency();
         return key;
     }
 

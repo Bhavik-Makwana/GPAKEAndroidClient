@@ -99,7 +99,9 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
     protected Long doInBackground(Button... b) {
         try {
             Log.d("connect", "SERVER");
-            String serverAddress = "192.168.0.25";
+            String serverAddress = "172.31.180.120";
+//            String serverAddress = "192.168.0.25";
+
             Socket socket = new Socket(serverAddress, 8080);
             in = new BufferedReader(new InputStreamReader(
                     socket.getInputStream()));
@@ -213,8 +215,17 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
             endTime = System.currentTimeMillis();
             time.put("1) Latency of computing round 1 per participant (ms):", (endTime-startTime));
             data = gson.toJson(dataObject);
+
+            startTime = System.currentTimeMillis();
             out.println(data);
-            response = in.readLine();
+            endTime = System.currentTimeMillis();
+            time.put("1a) Latency of sending round 1 data", (endTime-startTime));
+
+            startTime = System.currentTimeMillis();
+            out.println(data);
+            endTime = System.currentTimeMillis();
+            time.put("1b) Latency of receiving round 1 response", (endTime-startTime));
+
             RoundOneResponse rOneResponse = gson.fromJson(response, RoundOneResponse.class);
 
 
@@ -339,9 +350,17 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
             time.put("3) Latency of computing round 2 per participant (ms):", (endTime-startTime));
 
             // send serialized round two data to server
+            startTime = System.currentTimeMillis();
             out.println(gson.toJson(dataRoundTwo));
+            endTime = System.currentTimeMillis();
+            time.put("3a) Latency of sending round 2 data", (endTime-startTime));
+
             // get serialized json of all round 2 calculations
+            startTime = System.currentTimeMillis();
             response = in.readLine();
+            endTime = System.currentTimeMillis();
+            time.put("3b) Latency of receiving round 2 response", (endTime-startTime));
+
             RoundTwoResponse rTwoResponse = gson.fromJson(response, RoundTwoResponse.class);
 
 
@@ -368,9 +387,16 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
             endTime = System.currentTimeMillis();
             time.put("4) Latency of verifying round 2 per participant (ms):", (endTime-startTime));
             // send confirmation to server
+            startTime = System.currentTimeMillis();
             out.println("1");
+            endTime = System.currentTimeMillis();
+            time.put("4a) Latency of sending round 2 data", (endTime-startTime));
+
             // server can issue go ahead of next stage
+            startTime = System.currentTimeMillis();
             response = in.readLine();
+            endTime = System.currentTimeMillis();
+            time.put("4b) Latency of retrieving round 2 response", (endTime-startTime));
             if (!response.equals("1")) {
                 exitWithError("All participants failed to verify Round 1");
             }
@@ -468,8 +494,19 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
             endTime = System.currentTimeMillis();
             time.put("5) Latency of computing round 3 per participant (ms):", (endTime-startTime));
 
+
+            startTime = System.currentTimeMillis();
             out.println(gson.toJson(roundThree));
+            endTime = System.currentTimeMillis();
+            time.put("5a) Latency of sending round 3 data", (endTime-startTime));
+
+
+
+            startTime = System.currentTimeMillis();
             response = in.readLine();
+            endTime = System.currentTimeMillis();
+            time.put("5b) Latency of retrieving round 3 data", (endTime-startTime));
+
             RoundThreeResponse rThreeResponse= gson.fromJson(response, RoundThreeResponse.class);
 
 
@@ -562,6 +599,7 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
             }
 
             endTime = System.currentTimeMillis();
+
             time.put("6) Latency of verifying round 3 for participant (ms):", (endTime-startTime));
             // send confirmation to server
             out.println("1");

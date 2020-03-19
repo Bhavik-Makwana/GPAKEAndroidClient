@@ -56,8 +56,8 @@ public class JPAKEPlusEC extends AsyncTask<Button, Long, BigInteger>  {
         try {
             Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
             // Make connection and initialize streams
-            String serverAddress = "172.31.234.166";
-            Socket socket = new Socket(serverAddress, 8080);
+            String serverAddress = "192.168.1.137";
+            Socket socket = new Socket(serverAddress, 8002);
             in = new BufferedReader(new InputStreamReader(
                     socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);

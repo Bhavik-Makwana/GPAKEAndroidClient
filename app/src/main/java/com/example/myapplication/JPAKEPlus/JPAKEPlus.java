@@ -99,10 +99,10 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
     protected Long doInBackground(Button... b) {
         try {
             Log.d("connect", "SERVER");
-            String serverAddress = "172.31.180.120";
+            String serverAddress = "192.168.1.137";
 //            String serverAddress = "192.168.0.25";
 
-            Socket socket = new Socket(serverAddress, 8080);
+            Socket socket = new Socket(serverAddress, 8002);
             in = new BufferedReader(new InputStreamReader(
                     socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
@@ -222,7 +222,7 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
             time.put("1a) Latency of sending round 1 data", (endTime-startTime));
 
             startTime = System.currentTimeMillis();
-            out.println(data);
+            response = in.readLine();
             endTime = System.currentTimeMillis();
             time.put("1b) Latency of receiving round 1 response", (endTime-startTime));
 

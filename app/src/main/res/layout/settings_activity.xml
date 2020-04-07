@@ -29,5 +29,24 @@
             android:layout_marginLeft="600px"
             android:layout_marginTop="70px"
             android:text="Button" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="wrap_content"
+            android:layout_height="46dp"
+            android:ems="10"
+            android:layout_marginTop="250px"
+            android:inputType="textPersonName"
+            android:layout_marginLeft="300px"
+            android:text="deadbeef" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="300px"
+
+            android:text="Password:" />
+
     </FrameLayout>
 </LinearLayout>

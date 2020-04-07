@@ -119,6 +119,7 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
                     out.println(clientName);
                 } else if (line.startsWith("NAMEACCEPTED")) {
                     clientId = Integer.parseInt(in.readLine());
+                    Log.d("JPAKE", "CLIENTID  "+clientId);
                     break;
                 }
             }
@@ -130,8 +131,10 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
                 e.printStackTrace();
             }
             out.println(":START");
-            Log.d("JPAKE", "eeee");
+            Log.d("JPAKEPairing", "eeee");
             Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+            jpakePlus();
+/**
             // Make connection and initialize streams
 //        String serverAddress = getServerAddress();
             RoundZero roundZero = new RoundZero();
@@ -142,24 +145,19 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
             String json = in.readLine();
             json = in.readLine();
             roundZero = gson.fromJson(json, RoundZero.class);
-            System.out.println(json);
 
 
 
             long cID = (long) clientId;
             clients = roundZero.getClientIDs();
-            Log.d("JPAKE", "*************** ROUND 1 ***************");
-            startTime = System.currentTimeMillis();
-
+            Log.d("JPAKEPairing", "*************** ROUND 1 ***************");
             int n = clients.size();
-
-            // signerId[i] = i + ""
             signerID = clientId + "";
 
+            startTime = System.currentTimeMillis();
             // aij in [0, q-1], b_ij in [1, q-1]
 
             for (int j=0; j<n; j++) {
-                System.out.println(clients.get(j) instanceof Long);
                 long jID = clients.get(j);
                 if (cID==jID){
                     continue;
@@ -198,7 +196,7 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
             schnorrZKPyi.add(schnorrZKP.getGenPowV());
             schnorrZKPyi.add(schnorrZKP.getR());
 
-            Log.d("JPAKE", "********** SEND ROUND 1 DATA **********");
+            Log.d("JPAKEPairing", "********** SEND ROUND 1 DATA **********");
             RoundOne dataObject = new RoundOne();
             dataObject.setAij(aij);
             dataObject.setBij(bij);
@@ -216,21 +214,21 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
             time.put("1) Latency of computing round 1 per participant (ms):", (endTime-startTime));
             data = gson.toJson(dataObject);
 
-            startTime = System.currentTimeMillis();
+//            startTime = System.currentTimeMillis();
             out.println(data);
-            endTime = System.currentTimeMillis();
-            time.put("1a) Latency of sending round 1 data", (endTime-startTime));
+//            endTime = System.currentTimeMillis();
+//            time.put("1a) Latency of sending round 1 data", (endTime-startTime));
 
-            startTime = System.currentTimeMillis();
+//            startTime = System.currentTimeMillis();
             response = in.readLine();
-            endTime = System.currentTimeMillis();
-            time.put("1b) Latency of receiving round 1 response", (endTime-startTime));
+//            endTime = System.currentTimeMillis();
+//            time.put("1b) Latency of receiving round 1 response", (endTime-startTime));
 
             RoundOneResponse rOneResponse = gson.fromJson(response, RoundOneResponse.class);
 
 
             // VERIFICATION
-            Log.d("JPAKE", "************ VERIFY ROUND 1 ***********");
+            Log.d("JPAKEPairing", "************ VERIFY ROUND 1 ***********");
             startTime = System.currentTimeMillis();
 
             for (int i=0; i<n; i++) {
@@ -245,7 +243,7 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
                 rOneResponse.getgPowZi().put(current, rOneResponse.getgPowYi().get(leftNeighbour).modInverse(p).multiply(rOneResponse.getgPowYi().get(rightNeighbour)).mod(p));
 
                 if(rOneResponse.getgPowZi().get(current).compareTo(BigInteger.ONE) == 0) {
-                    Log.d("JPAKE", "Round 1 verification failed at checking g^{y_{i+1}}/g^{y_{i-1}}!=1 for i="+i);
+                    Log.d("JPAKEPairing", "Round 1 verification failed at checking g^{y_{i+1}}/g^{y_{i-1}}!=1 for i="+i);
                 }
             }
 
@@ -263,14 +261,14 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
                         rOneResponse.getSchnorrZKPbij().get(jID).get(cID).get(1),
                         Long.toString(jID))) {
                     out.println(0);
-                    Log.d("JPAKE", "FAILED 1");
+                    Log.d("JPAKEPairing", "FAILED 1");
                     exitWithError("Round 1 verification failed at checking SchnorrZKP for bij. (i,j)="+"(" + cID + "," +jID + ")");
                 }
 
                 // check g^{b_ji} != 1
                 if (rOneResponse.getgPowBij().get(jID).get(cID).compareTo(BigInteger.ONE) == 0) {
                     out.println("0");
-                    Log.d("JPAKE", "FAILED 2");
+                    Log.d("JPAKEPairing", "FAILED 2");
                     exitWithError("Round 1 verification failed at checking g^{ji} !=1");
                 }
 
@@ -282,7 +280,7 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
                         rOneResponse.getSchnorrZKPaij().get(jID).get(cID).get(1),
                         Long.toString(jID))) {
                     out.println("0");
-                    Log.d("JPAKE", "FAILED 3");
+                    Log.d("JPAKEPairing", "FAILED 3");
                     exitWithError("Round 1 verification failed at checking SchnorrZKP for aij. (i,j)="+"(" + cID + "," + jID + ")");
                 }
 
@@ -293,7 +291,7 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
                         rOneResponse.getSchnorrZKPyi().get(jID).get(1),
                         Long.toString(jID))) {
                     out.println("0");
-                    Log.d("JPAKE", "FAILED 4");
+                    Log.d("JPAKEPairing", "FAILED 4");
                     exitWithError("Round 1 verification failed at checking SchnorrZKP for yi. (i,j)="+"(" + cID + "," +jID + ")");
                 }
             }
@@ -309,7 +307,7 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
             }
 
 
-            Log.d("JPAKE", "*************** ROUND 2 ***************");
+            Log.d("JPAKEPairing", "*************** ROUND 2 ***************");
             startTime = System.currentTimeMillis();
 
             // Each participant sends newGen^{bij * s} and ZKP{bij * s}
@@ -322,12 +320,12 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
 
                 // g^{a_ij} * g^{a_ji} * g^{b_jj} mod p
                 newGen.put(jID,
-                        rOneResponse.getgPowAij().get(cID).get(jID)
+                        gPowAij.get(jID)
                                 .multiply(rOneResponse.getgPowAij().get(jID).get(cID))
                                 .multiply(rOneResponse.getgPowBij().get(jID).get(cID)).mod(p));
 
                 // b_ij * s
-                bijs.put(jID, rOneResponse.getBij().get(cID).get(jID).multiply(s).mod(q));
+                bijs.put(jID, bij.get(jID).multiply(s).mod(q));
 
                 // (g^{a_ij} * g^{a_ji} * g^{b_jj} mod p)^{b_ij * s}
                 newGenPowBijs.put(jID, newGen.get(jID).modPow(bijs.get(jID), p));
@@ -340,7 +338,7 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
 
 
             RoundTwo dataRoundTwo = new RoundTwo();
-            dataRoundTwo.setBijs(bijs);
+//            dataRoundTwo.setBijs(bijs);
             dataRoundTwo.setNewGen(newGen);
             dataRoundTwo.setNewGenPowBijs(newGenPowBijs);
             dataRoundTwo.setSchnorrZKPbijs(schnorrZKPbijs);
@@ -350,23 +348,23 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
             time.put("3) Latency of computing round 2 per participant (ms):", (endTime-startTime));
 
             // send serialized round two data to server
-            startTime = System.currentTimeMillis();
+//            startTime = System.currentTimeMillis();
             out.println(gson.toJson(dataRoundTwo));
-            endTime = System.currentTimeMillis();
-            time.put("3a) Latency of sending round 2 data", (endTime-startTime));
+//            endTime = System.currentTimeMillis();
+//            time.put("3a) Latency of sending round 2 data", (endTime-startTime));
 
             // get serialized json of all round 2 calculations
-            startTime = System.currentTimeMillis();
+//            startTime = System.currentTimeMillis();
             response = in.readLine();
-            endTime = System.currentTimeMillis();
-            time.put("3b) Latency of receiving round 2 response", (endTime-startTime));
+//            endTime = System.currentTimeMillis();
+//            time.put("3b) Latency of receiving round 2 response", (endTime-startTime));
 
             RoundTwoResponse rTwoResponse = gson.fromJson(response, RoundTwoResponse.class);
 
 
-            Log.d("JPAKE", "************ VERIFY ROUND 2 ***********");
-            startTime = System.currentTimeMillis();
+            Log.d("JPAKEPairing", "************ VERIFY ROUND 2 ***********");
 
+            startTime = System.currentTimeMillis();
             //             each participant verifies ZKP{bijs}
             for (int j=0; j<n; j++) {
                 long jID = clients.get(j);
@@ -387,23 +385,23 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
             endTime = System.currentTimeMillis();
             time.put("4) Latency of verifying round 2 per participant (ms):", (endTime-startTime));
             // send confirmation to server
-            startTime = System.currentTimeMillis();
+//            startTime = System.currentTimeMillis();
             out.println("1");
-            endTime = System.currentTimeMillis();
-            time.put("4a) Latency of sending round 2 data", (endTime-startTime));
+//            endTime = System.currentTimeMillis();
+//            time.put("4a) Latency of sending round 2 data", (endTime-startTime));
 
             // server can issue go ahead of next stage
-            startTime = System.currentTimeMillis();
+//            startTime = System.currentTimeMillis();
             response = in.readLine();
-            endTime = System.currentTimeMillis();
-            time.put("4b) Latency of retrieving round 2 response", (endTime-startTime));
+//            endTime = System.currentTimeMillis();
+//            time.put("4b) Latency of retrieving round 2 response", (endTime-startTime));
             if (!response.equals("1")) {
                 exitWithError("All participants failed to verify Round 1");
             }
 
 
-            Log.d("JPAKE", "*************** ROUND 3 ***************");
-
+            Log.d("JPAKEPairing", "*************** ROUND 3 ***************");
+            startTime = System.currentTimeMillis();
             gPowZiPowYi = rOneResponse.getgPowZi().get(cID).modPow(rOneResponse.getYi().get(cID), p);
 
             ChaumPedersonZKP chaumPedersonZKP = new ChaumPedersonZKP();
@@ -427,10 +425,10 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
                 }
 
                 BigInteger rawKey = rOneResponse.getgPowBij().get(jID).get(cID)
-                        .modPow(rTwoResponse.getBijs().get(cID).get(jID), p)
+                        .modPow(bijs.get(jID), p)
                         .modInverse(p)
                         .multiply(rTwoResponse.getNewGenPowBijs().get(jID).get(cID))
-                        .modPow(rOneResponse.getBij().get(cID).get(jID), p);
+                        .modPow(bij.get(jID), p);
 
                 pairwiseKeysMAC.put(jID, getSHA256(rawKey, "MAC"));
                 pairwiseKeysKC.put(jID, getSHA256(rawKey, "KC"));
@@ -495,22 +493,22 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
             time.put("5) Latency of computing round 3 per participant (ms):", (endTime-startTime));
 
 
-            startTime = System.currentTimeMillis();
+//            startTime = System.currentTimeMillis();
             out.println(gson.toJson(roundThree));
-            endTime = System.currentTimeMillis();
-            time.put("5a) Latency of sending round 3 data", (endTime-startTime));
+//            endTime = System.currentTimeMillis();
+//            time.put("5a) Latency of sending round 3 data", (endTime-startTime));
 
 
 
-            startTime = System.currentTimeMillis();
+//            startTime = System.currentTimeMillis();
             response = in.readLine();
-            endTime = System.currentTimeMillis();
-            time.put("5b) Latency of retrieving round 3 data", (endTime-startTime));
+//            endTime = System.currentTimeMillis();
+//            time.put("5b) Latency of retrieving round 3 data", (endTime-startTime));
 
             RoundThreeResponse rThreeResponse= gson.fromJson(response, RoundThreeResponse.class);
 
 
-            Log.d("JPAKE", "*************** ROUND 4 ***************");
+            Log.d("JPAKEPairing", "*************** ROUND 4 ***************");
             startTime = System.currentTimeMillis();
 
             // ith participant
@@ -555,8 +553,7 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
                     mac.update(rOneResponse.getgPowAij().get(cID).get(jID).toByteArray());
                     mac.update(rOneResponse.getgPowBij().get(cID).get(jID).toByteArray());
                     BigInteger temp = new BigInteger(mac.doFinal());
-                    System.out.println(temp);
-                    System.out.println(rThreeResponse.gethMacsKC().get(jID).get(cID));
+
                     if (temp.compareTo(rThreeResponse.gethMacsKC().get(jID).get(cID)) != 0) {
                         exitWithError("Round 3 verification failed at checking KC for (i,j)=("+cID+","+jID+")");
                     }
@@ -611,10 +608,9 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
 
 
             HashMap<Long, BigInteger> multipleSessionKeys = new HashMap<>();
-            Log.d("JPAKE", "*********** KEY COMPUTATION ***********");
+            Log.d("JPAKEPairing", "*********** KEY COMPUTATION ***********");
             startTime = System.currentTimeMillis();
 
-//            for (int i=0; i<n; i++) {
             long iID = Long.parseLong(signerID);
             int i = rOneResponse.getSignerID().indexOf(signerID);
                 // ith participant
@@ -633,29 +629,100 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
                 multipleSessionKeys.put(clients.get(i), getSHA256(finalTerm));
                 sessionKeys =  getSHA256(finalTerm);
 
-//            }
-
-//            for (int i=0; i<n; i++) {
-//                Log.d("JPAKE", "Session key " + i + " for client " + clients.get(i) + ": " + multipleSessionKeys.get(clients.get(i)).toString(16));
-//            }
 
             BigInteger key = getSHA256(finalTerm);
 
             endTime = System.currentTimeMillis();
             time.put("7) Latency of computing key for participant (ms):", (endTime-startTime));
             out.println("1");
+//            return key;
+        }
+ */
         }
         catch (IOException e) {
             e.printStackTrace();
         }
-        displayLatency();
+//        displayLatency();
         return (long) 1;
+
+    }
+
+    private BigInteger jpakePlus() {
+        try {
+
+            String json = in.readLine();
+            json = in.readLine();
+            RoundZero roundZero = gson.fromJson(json, RoundZero.class);
+            Log.d("JPAkE", "passed in id " + clientId);
+            Log.d("JPAkE", Long.toString(clientId));
+            JPAKEPlusNetwork jpake = new JPAKEPlusNetwork("deadbeef", p, q, g, Long.toString(clientId), roundZero.getClientIDs());
+            RoundOne roundOne = jpake.roundOne();
+            data = gson.toJson(roundOne);
+            out.println(data);
+            response = in.readLine();
+            RoundOneResponse rOneResponse = gson.fromJson(response, RoundOneResponse.class);
+
+            boolean r1v = jpake.verifyRoundOne(rOneResponse);
+            if (!r1v) {
+                System.exit(0);
+            }
+            // send confirmation to server
+            out.println("1");
+            // server can issue go ahead of next stage
+            response = in.readLine();
+            if (!response.equals("1")) {
+                Log.d("jpake", "All participants failed to verify Round 1");
+                System.exit(0);
+            }
+            RoundTwo roundTwo = jpake.roundTwo(rOneResponse);
+
+            out.println(gson.toJson(roundTwo));
+            // get serialized json of all round 2 calculations
+            response = in.readLine();
+            RoundTwoResponse rTwoResponse= gson.fromJson(response, RoundTwoResponse.class);
+            System.out.println(response);
+            boolean r2v = jpake.verifyRoundTwo(rTwoResponse);
+            if (!r2v) {
+                Log.d("jpake", "FAILED");
+                System.exit(0);
+            }
+            out.println("1");
+            response = in.readLine();
+            if (!response.equals("1")) {
+                Log.d("jpake", "All participants failed to verify Round 1");
+                System.exit(0);
+            }
+            RoundThree roundThree = jpake.roundThree(rOneResponse, rTwoResponse);
+
+            out.println(gson.toJson(roundThree));
+            response = in.readLine();
+            RoundThreeResponse rThreeResponse = gson.fromJson(response, RoundThreeResponse.class);
+            boolean r3v = jpake.verifyRoundTwo(rTwoResponse);
+            if (!r3v) {
+                Log.d("jpake", "FAILED");
+                System.exit(0);
+            }
+            out.println("1");
+            response = in.readLine();
+            if (!response.equals("1")) {
+                Log.d("jpake", "All participants failed to verify Round 1");
+                System.exit(0);
+            }
+
+            BigInteger key = jpake.computeKey(rOneResponse, rThreeResponse);
+            out.println("1");
+            return key;
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void displayLatency() {
-        System.out.println("\nLatency of Each Round JPAKE+\n");
+        System.out.println("\nLatency of Each Round JPAKEPairing+\n");
         for (Map.Entry<String, Long> e : time.entrySet()) {
-            Log.d("jpake", e.getKey() + e.getValue());
+            Log.d("LATENCY", e.getKey() + e.getValue());
         }
     }
 
@@ -803,14 +870,6 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
 
         // ZKP: {V=gen^v, r}
         BigInteger h = getSHA256(gen, genPowV, genPowX, userID);
-//        System.out.println(genPowX.compareTo(BigInteger.ZERO) == 1 );
-//        System.out.println(genPowX.compareTo(p) == -1);
-//        System.out.println(genPowX.modPow(q, p).compareTo(BigInteger.ONE) == 0);
-//        System.out.println(gen.modPow(r,p).multiply(genPowX.modPow(h,p)).mod(p).compareTo(genPowV) == 0);
-//        System.out.println(genPowX.compareTo(BigInteger.ZERO) == 1 &&
-//                genPowX.compareTo(p) == -1 &&
-//                genPowX.modPow(q, p).compareTo(BigInteger.ONE) == 0 &&
-//                gen.modPow(r,p).multiply(genPowX.modPow(h,p)).mod(p).compareTo(genPowV) == 0);
         if (genPowX.compareTo(BigInteger.ZERO) == 1 && // gen^x > 0
                 genPowX.compareTo(p) == -1 && // gen^x < p
                 genPowX.modPow(q, p).compareTo(BigInteger.ONE) == 0 && // gen^x^q = 1
@@ -886,7 +945,7 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
 
 
     public void exitWithError(String s){
-        Log.d("JPAKE", "Exit with ERROR: " + s);
+        Log.d("JPAKEPairing", "Exit with ERROR: " + s);
         System.exit(0);
     }
 

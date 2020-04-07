@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.math.BigInteger;
 import java.net.Socket;
 
 
@@ -29,7 +30,8 @@ import java.net.Socket;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView mTextViewReplyFromServer;
     private EditText mEditTextSendMessage;
-
+    public BigInteger groupKey;
+    public BigInteger pairKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

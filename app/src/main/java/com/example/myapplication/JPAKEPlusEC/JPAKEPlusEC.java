@@ -13,6 +13,7 @@ import com.example.myapplication.JPAKEPlusEC.POJOs.ECRoundThree;
 import com.example.myapplication.JPAKEPlusEC.POJOs.ECRoundThreeResponse;
 import com.example.myapplication.JPAKEPlusEC.POJOs.ECRoundTwo;
 import com.example.myapplication.JPAKEPlusEC.POJOs.ECRoundTwoResponse;
+import com.example.myapplication.R;
 import com.example.myapplication.RoundZero;
 import com.google.gson.Gson;
 
@@ -95,6 +96,7 @@ public class JPAKEPlusEC extends AsyncTask<Button, Long, BigInteger>  {
             String json = in.readLine();
             RoundZero roundZero = gson.fromJson(json, RoundZero.class);
             ArrayList<Long> clients =  roundZero.getClientIDs();
+
             JPAKEPlusECNetwork jpake = new JPAKEPlusECNetwork("deadbeef", roundZero.getClientIDs().size(), Long.toString(clientId), clients, clientId);
             ECRoundOne roundOne = jpake.roundOne();
             data = gson.toJson(roundOne);

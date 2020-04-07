@@ -583,9 +583,9 @@ public class JPAKEPlusECNetwork {
     }
 
     public void displayLatency() {
-        System.out.println("\nLatency of Each Round JPAKE+\n");
+        System.out.println("\nLatency of Each Round JPAKEPairing+\n");
         for (Map.Entry<String, Long> e : time.entrySet()) {
-            Log.d("jpake", e.getKey() + e.getValue());
+            Log.d("EC_LATENCY", e.getKey() + e.getValue());
         }
     }
 

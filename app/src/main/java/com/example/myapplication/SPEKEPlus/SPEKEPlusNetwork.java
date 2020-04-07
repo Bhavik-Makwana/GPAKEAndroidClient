@@ -235,7 +235,8 @@ public class SPEKEPlusNetwork {
                 continue;
             }
 
-            if(!verifyChaumPedersonZKP(p, q, g, r1.getgPowYi().get(jID),
+            if(!verifyChaumPedersonZKP(p, q, g,
+                    r1.getgPowYi().get(jID),
                     r1.getgPowZi().get(jID),
                     r2.getgPowZiPowYi().get(jID),
                     r2.getChaumPedersonZKPi().get(jID).get(0),
@@ -262,6 +263,7 @@ public class SPEKEPlusNetwork {
                 mac.update("KC".getBytes());
                 mac.update(new BigInteger(""+jID).toByteArray());
                 mac.update(new BigInteger(""+cID).toByteArray());
+
                 mac.update(r1.getGsPowXi().get(jID).toByteArray());
                 mac.update(r1.getGsPowXi().get(cID).toByteArray());
                 if (new BigInteger(mac.doFinal()).compareTo(r2.gethMacsKC().get(jID).get(cID)) != 0) {
@@ -309,43 +311,35 @@ public class SPEKEPlusNetwork {
     }
 
     public BigInteger computeKeys(SpekeRoundOneResponse r1, SpekeRoundTwoResponse r2) {
-        startTime = System.currentTimeMillis();
-
         Log.d("speke",  "*********** KEY COMPUTATION ***********");
-        HashMap<Long, BigInteger> multipleSessionKeys = new HashMap<>();
-        long cID = Long.parseLong(signerID);
-        for (int i=0; i<n; i++) {
-            long iID = Long.parseLong(r1.getSignerID().get(i));
+        startTime = System.currentTimeMillis();
+        long iID = Long.parseLong(signerID);
+        int i = r1.getSignerID().indexOf(signerID);
+        // ith participant
+        int cyclicIndex = getCyclicIndex(i-1, n);
+        BigInteger firstTerm = r1.getgPowYi().get(Long.parseLong(r1.getSignerID().get(cyclicIndex)))
+                .modPow(r1.getYi().get(iID).multiply(BigInteger.valueOf(n)), p);
+        BigInteger finalTerm = firstTerm;
 
-            // ith participant
-            int cyclicIndex = getCyclicIndex(i-1, n);
-            BigInteger firstTerm = r1.getgPowYi().get(Long.parseLong(r1.getSignerID().get(cyclicIndex)))
-                    .modPow(r1.getYi().get(iID).multiply(BigInteger.valueOf(n)), p);
-            BigInteger finalTerm = firstTerm;
-
-            for (int j=0; j<(n-1) ; j++){
-                cyclicIndex = getCyclicIndex(i+j, n);
-                BigInteger interTerm = r2.getgPowZiPowYi().get(Long.parseLong(r1.getSignerID().get(cyclicIndex)))
-                        .modPow(BigInteger.valueOf(n-1-j), p);
-                finalTerm = finalTerm.multiply(interTerm).mod(p);
-            }
-
-            multipleSessionKeys.put(iID, getSHA256(finalTerm));
+        for (int j=0; j<(n-1) ; j++) {
+            cyclicIndex = getCyclicIndex(i+j, n);
+            BigInteger interTerm = r2.getgPowZiPowYi().get(Long.parseLong(r1.getSignerID().get(cyclicIndex)))
+                    .modPow(BigInteger.valueOf(n-1-j), p);
+            finalTerm = finalTerm.multiply(interTerm).mod(p);
         }
 
-        for (int i=0; i<n; i++) {
-            Log.d("speke",  "Session key " + i + ": " + multipleSessionKeys.get(Long.parseLong(r1.getSignerID().get(i))).toString(16));
-        }
-        endTime = System.currentTimeMillis();
+
+        BigInteger key = getSHA256(finalTerm);
+                endTime = System.currentTimeMillis();
         time.put("5) Latency of key computation for participant (ms):", (endTime-startTime));
         displayLatency();
-        return multipleSessionKeys.get(cID);
+        return key;
     }
 
     public void displayLatency() {
-        System.out.println("\nLatency of Each Round JPAKE+\n");
+        System.out.println("\nLatency of Each Round JPAKEPairing+\n");
         for (Map.Entry<String, Long> e : time.entrySet()) {
-            Log.d("jpake", e.getKey() + e.getValue());
+            Log.d("SPEKE_LATENCY", e.getKey() + e.getValue());
         }
     }
 

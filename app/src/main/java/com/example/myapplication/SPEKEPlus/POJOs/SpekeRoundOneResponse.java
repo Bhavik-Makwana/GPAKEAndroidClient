@@ -2,62 +2,62 @@ package com.example.myapplication.SPEKEPlus.POJOs;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SpekeRoundOneResponse {
-    private HashMap<Long, BigInteger> xi = new HashMap<>();
-    private HashMap<Long, BigInteger> yi = new HashMap<>();
-    private HashMap<Long, BigInteger> gsPowXi = new HashMap<>();
-    private HashMap<Long, BigInteger> gPowYi = new HashMap<>();
-    private HashMap<Long, BigInteger> gPowZi = new HashMap<>();
-    private HashMap<Long, ArrayList<BigInteger>> schnorrZKPi = new HashMap<>();
+    private ConcurrentHashMap<Long, BigInteger> xi = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Long, BigInteger> yi = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Long, BigInteger> gsPowXi = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Long, BigInteger> gPowYi = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Long, BigInteger> gPowZi = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Long, ArrayList<BigInteger>> schnorrZKPi = new ConcurrentHashMap<>();
     private ArrayList<String> signerID = new ArrayList<>();
 
-    public HashMap<Long, BigInteger> getXi() {
+    public ConcurrentHashMap<Long, BigInteger> getXi() {
         return xi;
     }
 
-    public void setXi(HashMap<Long, BigInteger> xi) {
+    public void setXi(ConcurrentHashMap<Long, BigInteger> xi) {
         this.xi = xi;
     }
 
-    public HashMap<Long, BigInteger> getYi() {
+    public ConcurrentHashMap<Long, BigInteger> getYi() {
         return yi;
     }
 
-    public void setYi(HashMap<Long, BigInteger> yi) {
+    public void setYi(ConcurrentHashMap<Long, BigInteger> yi) {
         this.yi = yi;
     }
 
-    public HashMap<Long, BigInteger> getGsPowXi() {
+    public ConcurrentHashMap<Long, BigInteger> getGsPowXi() {
         return gsPowXi;
     }
 
-    public void setGsPowXi(HashMap<Long, BigInteger> gsPowXi) {
+    public void setGsPowXi(ConcurrentHashMap<Long, BigInteger> gsPowXi) {
         this.gsPowXi = gsPowXi;
     }
 
-    public HashMap<Long, BigInteger> getgPowYi() {
+    public ConcurrentHashMap<Long, BigInteger> getgPowYi() {
         return gPowYi;
     }
 
-    public void setgPowYi(HashMap<Long, BigInteger> gPowYi) {
+    public void setgPowYi(ConcurrentHashMap<Long, BigInteger> gPowYi) {
         this.gPowYi = gPowYi;
     }
 
-    public HashMap<Long, BigInteger> getgPowZi() {
+    public ConcurrentHashMap<Long, BigInteger> getgPowZi() {
         return gPowZi;
     }
 
-    public void setgPowZi(HashMap<Long, BigInteger> gPowZi) {
+    public void setgPowZi(ConcurrentHashMap<Long, BigInteger> gPowZi) {
         this.gPowZi = gPowZi;
     }
 
-    public HashMap<Long, ArrayList<BigInteger>> getSchnorrZKPi() {
+    public ConcurrentHashMap<Long, ArrayList<BigInteger>> getSchnorrZKPi() {
         return schnorrZKPi;
     }
 
-    public void setSchnorrZKPi(HashMap<Long, ArrayList<BigInteger>> schnorrZKPi) {
+    public void setSchnorrZKPi(ConcurrentHashMap<Long, ArrayList<BigInteger>> schnorrZKPi) {
         this.schnorrZKPi = schnorrZKPi;
     }
 

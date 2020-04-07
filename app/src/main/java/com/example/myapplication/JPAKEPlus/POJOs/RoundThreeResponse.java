@@ -2,63 +2,63 @@ package com.example.myapplication.JPAKEPlus.POJOs;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RoundThreeResponse {
-    private HashMap<Long, BigInteger> gPowZiPowYi;
-    private HashMap<Long, ArrayList<BigInteger>> chaumPedersonZKPi = new HashMap<>();
-    private HashMap<Long, HashMap<Long, BigInteger>> pairwiseKeysMAC = new HashMap<>();
-    private HashMap<Long, HashMap<Long, BigInteger>> pairwiseKeysKC = new HashMap<>();
-    private HashMap<Long, HashMap<Long, BigInteger>> hMacsMAC = new HashMap<>();
-    private HashMap<Long, HashMap<Long, BigInteger>> hMacsKC = new HashMap<>();
+    private ConcurrentHashMap<Long, BigInteger> gPowZiPowYi;
+    private ConcurrentHashMap<Long, ArrayList<BigInteger>> chaumPedersonZKPi = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Long, ConcurrentHashMap<Long, BigInteger>> pairwiseKeysMAC = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Long, ConcurrentHashMap<Long, BigInteger>> pairwiseKeysKC = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Long, ConcurrentHashMap<Long, BigInteger>> hMacsMAC = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Long, ConcurrentHashMap<Long, BigInteger>> hMacsKC = new ConcurrentHashMap<>();
 
     public RoundThreeResponse() {};
 
-    public HashMap<Long, BigInteger> getgPowZiPowYi() {
+    public ConcurrentHashMap<Long, BigInteger> getgPowZiPowYi() {
         return gPowZiPowYi;
     }
 
-    public void setgPowZiPowYi(HashMap<Long, BigInteger> gPowZiPowYi) {
+    public void setgPowZiPowYi(ConcurrentHashMap<Long, BigInteger> gPowZiPowYi) {
         this.gPowZiPowYi = gPowZiPowYi;
     }
 
-    public HashMap<Long, ArrayList<BigInteger>> getChaumPedersonZKPi() {
+    public ConcurrentHashMap<Long, ArrayList<BigInteger>> getChaumPedersonZKPi() {
         return chaumPedersonZKPi;
     }
 
-    public void setChaumPedersonZKPi(HashMap<Long, ArrayList<BigInteger>> chaumPedersonZKPi) {
+    public void setChaumPedersonZKPi(ConcurrentHashMap<Long, ArrayList<BigInteger>> chaumPedersonZKPi) {
         this.chaumPedersonZKPi = chaumPedersonZKPi;
     }
 
-    public HashMap<Long, HashMap<Long, BigInteger>> getPairwiseKeysMAC() {
+    public ConcurrentHashMap<Long, ConcurrentHashMap<Long, BigInteger>> getPairwiseKeysMAC() {
         return pairwiseKeysMAC;
     }
 
-    public void setPairwiseKeysMAC(HashMap<Long, HashMap<Long, BigInteger>> pairwiseKeysMAC) {
+    public void setPairwiseKeysMAC(ConcurrentHashMap<Long, ConcurrentHashMap<Long, BigInteger>> pairwiseKeysMAC) {
         this.pairwiseKeysMAC = pairwiseKeysMAC;
     }
 
-    public HashMap<Long, HashMap<Long, BigInteger>> getPairwiseKeysKC() {
+    public ConcurrentHashMap<Long, ConcurrentHashMap<Long, BigInteger>> getPairwiseKeysKC() {
         return pairwiseKeysKC;
     }
 
-    public void setPairwiseKeysKC(HashMap<Long, HashMap<Long, BigInteger>> pairwiseKeysKC) {
+    public void setPairwiseKeysKC(ConcurrentHashMap<Long, ConcurrentHashMap<Long, BigInteger>> pairwiseKeysKC) {
         this.pairwiseKeysKC = pairwiseKeysKC;
     }
 
-    public HashMap<Long, HashMap<Long, BigInteger>> gethMacsMAC() {
+    public ConcurrentHashMap<Long, ConcurrentHashMap<Long, BigInteger>> gethMacsMAC() {
         return hMacsMAC;
     }
 
-    public void sethMacsMAC(HashMap<Long, HashMap<Long, BigInteger>> hMacsMAC) {
+    public void sethMacsMAC(ConcurrentHashMap<Long, ConcurrentHashMap<Long, BigInteger>> hMacsMAC) {
         this.hMacsMAC = hMacsMAC;
     }
 
-    public HashMap<Long, HashMap<Long, BigInteger>> gethMacsKC() {
+    public ConcurrentHashMap<Long, ConcurrentHashMap<Long, BigInteger>> gethMacsKC() {
         return hMacsKC;
     }
 
-    public void sethMacsKC(HashMap<Long, HashMap<Long, BigInteger>> hMacsKC) {
+    public void sethMacsKC(ConcurrentHashMap<Long, ConcurrentHashMap<Long, BigInteger>> hMacsKC) {
         this.hMacsKC = hMacsKC;
     }
 }

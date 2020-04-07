@@ -47,39 +47,8 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
     String sStr = "deadbeef";
     BigInteger s = getSHA256(sStr);
     int clientId;
-
-    long startTime;
-    long endTime;
     TreeMap<String, Long> time = new TreeMap<>();
-    // ROUND 1
-    HashMap<Long, BigInteger> aij = new HashMap<>();
-    HashMap<Long, BigInteger> gPowAij = new HashMap<>();
-    HashMap<Long, ArrayList<BigInteger>> schnorrZKPaij = new HashMap<>();
-    HashMap<Long, BigInteger> bij = new HashMap<>();
-    HashMap<Long, BigInteger>  gPowBij = new HashMap<>();
-    HashMap<Long, ArrayList<BigInteger>> schnorrZKPbij = new HashMap<>();
-    BigInteger yi;
-    BigInteger gPowYi;
-    BigInteger gPowZi;
-    ArrayList<BigInteger> schnorrZKPyi = new ArrayList<>();
-    String signerID;
-    SchnorrZKP schnorrZKP = new SchnorrZKP();
 
-    // *********************************** ROUND 2 ***********************************
-    HashMap<Long, BigInteger> newGen = new HashMap<>();
-    HashMap<Long, BigInteger> bijs = new HashMap<>();
-    HashMap<Long, BigInteger> newGenPowBijs = new HashMap<>();;
-    HashMap<Long, ArrayList<BigInteger>> schnorrZKPbijs = new HashMap<>();
-
-    // *********************************** ROUND 3 ***********************************
-    BigInteger gPowZiPowYi;
-    ArrayList<BigInteger> chaumPedersonZKPi = new ArrayList<>();
-    HashMap<Long, BigInteger> pairwiseKeysMAC = new HashMap<>();
-    HashMap<Long, BigInteger> pairwiseKeysKC = new HashMap<>();
-    HashMap<Long, BigInteger> hMacsMAC = new HashMap<>();
-    HashMap<Long, BigInteger> hMacsKC = new HashMap<>();
-    //   ************************************ KEYS ************************************
-    BigInteger sessionKeys;
     Button b, b2, b3;
     public JPAKEPlus(Button b, Button b2, Button b3) {
         this.b = b;
@@ -124,7 +93,7 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
                 }
             }
             try {
-                Thread.sleep(3000);
+                Thread.sleep(5000);
             }
             catch (InterruptedException e) {
 
@@ -154,7 +123,9 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
             JPAKEPlusNetwork jpake = new JPAKEPlusNetwork("deadbeef", p, q, g, Long.toString(clientId), roundZero.getClientIDs());
             RoundOne roundOne = jpake.roundOne();
             data = gson.toJson(roundOne);
+            Log.d("JPAKE", "Attempting to send data");
             out.println(data);
+            Log.d("JPAKE", "Data sent");
             response = in.readLine();
             RoundOneResponse rOneResponse = gson.fromJson(response, RoundOneResponse.class);
 

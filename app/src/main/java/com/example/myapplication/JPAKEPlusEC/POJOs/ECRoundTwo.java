@@ -3,45 +3,45 @@ package com.example.myapplication.JPAKEPlusEC.POJOs;
 import com.example.myapplication.JPAKEPlusEC.ZeroKnowledgeProofs.SchnorrZKP;
 
 import java.math.BigInteger;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ECRoundTwo {
-    private HashMap<Long, byte[]> newGen = new HashMap<>();
-    private HashMap<Long, BigInteger> bijs = new HashMap<>();
-    private HashMap<Long, byte[]> newGenPowBijs = new HashMap<>();
-    private HashMap<Long, SchnorrZKP> schnorrZKPbijs = new HashMap<>();
+    private ConcurrentHashMap<Long, byte[]> newGen = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Long, BigInteger> bijs = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Long, byte[]> newGenPowBijs = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Long, SchnorrZKP> schnorrZKPbijs = new ConcurrentHashMap<>();
 
     private String signerID;
 
-    public HashMap<Long, byte[]> getNewGen() {
+    public ConcurrentHashMap<Long, byte[]> getNewGen() {
         return newGen;
     }
 
-    public void setNewGen(HashMap<Long, byte[]> newGen) {
+    public void setNewGen(ConcurrentHashMap<Long, byte[]> newGen) {
         this.newGen = newGen;
     }
 
-    public HashMap<Long, BigInteger> getBijs() {
+    public ConcurrentHashMap<Long, BigInteger> getBijs() {
         return bijs;
     }
 
-    public void setBijs(HashMap<Long, BigInteger> bijs) {
+    public void setBijs(ConcurrentHashMap<Long, BigInteger> bijs) {
         this.bijs = bijs;
     }
 
-    public HashMap<Long, byte[]> getNewGenPowBijs() {
+    public ConcurrentHashMap<Long, byte[]> getNewGenPowBijs() {
         return newGenPowBijs;
     }
 
-    public void setNewGenPowBijs(HashMap<Long, byte[]> newGenPowBijs) {
+    public void setNewGenPowBijs(ConcurrentHashMap<Long, byte[]> newGenPowBijs) {
         this.newGenPowBijs = newGenPowBijs;
     }
 
-    public HashMap<Long, SchnorrZKP> getSchnorrZKPbijs() {
+    public ConcurrentHashMap<Long, SchnorrZKP> getSchnorrZKPbijs() {
         return schnorrZKPbijs;
     }
 
-    public void setSchnorrZKPbijs(HashMap<Long, SchnorrZKP> schnorrZKPbijs) {
+    public void setSchnorrZKPbijs(ConcurrentHashMap<Long, SchnorrZKP> schnorrZKPbijs) {
         this.schnorrZKPbijs = schnorrZKPbijs;
     }
 

@@ -2,15 +2,15 @@ package com.example.myapplication.JPAKEPlus.POJOs;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RoundOne {
-    HashMap<Long, BigInteger> aij = new HashMap<>();
-    HashMap<Long, BigInteger> gPowAij = new HashMap<>();
-    HashMap<Long, ArrayList<BigInteger>> schnorrZKPaij = new HashMap<>();
-    HashMap<Long, BigInteger> bij = new HashMap<>();
-    HashMap<Long, BigInteger>  gPowBij = new HashMap<>();
-    HashMap<Long, ArrayList<BigInteger>> schnorrZKPbij = new HashMap<>();
+    ConcurrentHashMap<Long, BigInteger> aij = new ConcurrentHashMap<>();
+    ConcurrentHashMap<Long, BigInteger> gPowAij = new ConcurrentHashMap<>();
+    ConcurrentHashMap<Long, ArrayList<BigInteger>> schnorrZKPaij = new ConcurrentHashMap<>();
+    ConcurrentHashMap<Long, BigInteger> bij = new ConcurrentHashMap<>();
+    ConcurrentHashMap<Long, BigInteger>  gPowBij = new ConcurrentHashMap<>();
+    ConcurrentHashMap<Long, ArrayList<BigInteger>> schnorrZKPbij = new ConcurrentHashMap<>();
     BigInteger yi;
     BigInteger gPowYi;
     BigInteger gPowZi;
@@ -20,51 +20,51 @@ public class RoundOne {
     public RoundOne() {
     }
 
-    public HashMap<Long, BigInteger> getAij() {
+    public ConcurrentHashMap<Long, BigInteger> getAij() {
         return aij;
     }
 
-    public void setAij(HashMap<Long, BigInteger> aij) {
+    public void setAij(ConcurrentHashMap<Long, BigInteger> aij) {
         this.aij = aij;
     }
 
-    public HashMap<Long, BigInteger> getgPowAij() {
+    public ConcurrentHashMap<Long, BigInteger> getgPowAij() {
         return gPowAij;
     }
 
-    public void setgPowAij(HashMap<Long, BigInteger> gPowAij) {
+    public void setgPowAij(ConcurrentHashMap<Long, BigInteger> gPowAij) {
         this.gPowAij = gPowAij;
     }
 
-    public HashMap<Long, ArrayList<BigInteger>> getSchnorrZKPaij() {
+    public ConcurrentHashMap<Long, ArrayList<BigInteger>> getSchnorrZKPaij() {
         return schnorrZKPaij;
     }
 
-    public void setSchnorrZKPaij(HashMap<Long, ArrayList<BigInteger>> schnorrZKPaij) {
+    public void setSchnorrZKPaij(ConcurrentHashMap<Long, ArrayList<BigInteger>> schnorrZKPaij) {
         this.schnorrZKPaij = schnorrZKPaij;
     }
 
-    public HashMap<Long, BigInteger> getBij() {
+    public ConcurrentHashMap<Long, BigInteger> getBij() {
         return bij;
     }
 
-    public void setBij(HashMap<Long, BigInteger> bij) {
+    public void setBij(ConcurrentHashMap<Long, BigInteger> bij) {
         this.bij = bij;
     }
 
-    public HashMap<Long, BigInteger> getgPowBij() {
+    public ConcurrentHashMap<Long, BigInteger> getgPowBij() {
         return gPowBij;
     }
 
-    public void setgPowBij(HashMap<Long, BigInteger> gPowBij) {
+    public void setgPowBij(ConcurrentHashMap<Long, BigInteger> gPowBij) {
         this.gPowBij = gPowBij;
     }
 
-    public HashMap<Long, ArrayList<BigInteger>> getSchnorrZKPbij() {
+    public ConcurrentHashMap<Long, ArrayList<BigInteger>> getSchnorrZKPbij() {
         return schnorrZKPbij;
     }
 
-    public void setSchnorrZKPbij(HashMap<Long, ArrayList<BigInteger>> schnorrZKPbij) {
+    public void setSchnorrZKPbij(ConcurrentHashMap<Long, ArrayList<BigInteger>> schnorrZKPbij) {
         this.schnorrZKPbij = schnorrZKPbij;
     }
 

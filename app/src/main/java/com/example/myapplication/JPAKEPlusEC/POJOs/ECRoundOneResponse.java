@@ -4,98 +4,98 @@ import com.example.myapplication.JPAKEPlusEC.ZeroKnowledgeProofs.SchnorrZKP;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ECRoundOneResponse {
-    private  HashMap<Long, HashMap<Long, BigInteger>> aij = new HashMap<>();
-    private  HashMap<Long, HashMap<Long, byte[]>> gPowAij = new HashMap<>();
-    private  HashMap<Long, HashMap<Long, SchnorrZKP>> schnorrZKPaij = new HashMap<>();
-    private  HashMap<Long, HashMap<Long, BigInteger>> bij = new HashMap<>();
-    private  HashMap<Long, HashMap<Long, byte[]>> gPowBij = new HashMap<>();
-    private  HashMap<Long, HashMap<Long, SchnorrZKP>> schnorrZKPbij = new HashMap<>();
-    private  HashMap<Long, BigInteger> yi = new HashMap<>();
-    private  HashMap<Long, byte[]> gPowYi = new HashMap<>();
-    private  HashMap<Long, byte[]> gPowZi = new HashMap<>();
-    private  HashMap<Long, SchnorrZKP> schnorrZKPyi = new HashMap<>();
+    private  ConcurrentHashMap<Long, ConcurrentHashMap<Long, BigInteger>> aij = new ConcurrentHashMap<>();
+    private  ConcurrentHashMap<Long, ConcurrentHashMap<Long, byte[]>> gPowAij = new ConcurrentHashMap<>();
+    private  ConcurrentHashMap<Long, ConcurrentHashMap<Long, SchnorrZKP>> schnorrZKPaij = new ConcurrentHashMap<>();
+    private  ConcurrentHashMap<Long, ConcurrentHashMap<Long, BigInteger>> bij = new ConcurrentHashMap<>();
+    private  ConcurrentHashMap<Long, ConcurrentHashMap<Long, byte[]>> gPowBij = new ConcurrentHashMap<>();
+    private  ConcurrentHashMap<Long, ConcurrentHashMap<Long, SchnorrZKP>> schnorrZKPbij = new ConcurrentHashMap<>();
+    private  ConcurrentHashMap<Long, BigInteger> yi = new ConcurrentHashMap<>();
+    private  ConcurrentHashMap<Long, byte[]> gPowYi = new ConcurrentHashMap<>();
+    private  ConcurrentHashMap<Long, byte[]> gPowZi = new ConcurrentHashMap<>();
+    private  ConcurrentHashMap<Long, SchnorrZKP> schnorrZKPyi = new ConcurrentHashMap<>();
     private  ArrayList<String> signerID = new ArrayList<>();
 
-    public HashMap<Long, HashMap<Long, BigInteger>> getAij() {
+    public ConcurrentHashMap<Long, ConcurrentHashMap<Long, BigInteger>> getAij() {
         return aij;
     }
 
-    public void setAij(HashMap<Long, HashMap<Long, BigInteger>> aij) {
+    public void setAij(ConcurrentHashMap<Long, ConcurrentHashMap<Long, BigInteger>> aij) {
         this.aij = aij;
     }
 
-    public HashMap<Long, HashMap<Long, byte[]>> getgPowAij() {
+    public ConcurrentHashMap<Long, ConcurrentHashMap<Long, byte[]>> getgPowAij() {
         return gPowAij;
     }
 
-    public void setgPowAij(HashMap<Long, HashMap<Long, byte[]>> gPowAij) {
+    public void setgPowAij(ConcurrentHashMap<Long, ConcurrentHashMap<Long, byte[]>> gPowAij) {
         this.gPowAij = gPowAij;
     }
 
-    public HashMap<Long, HashMap<Long, SchnorrZKP>> getSchnorrZKPaij() {
+    public ConcurrentHashMap<Long, ConcurrentHashMap<Long, SchnorrZKP>> getSchnorrZKPaij() {
         return schnorrZKPaij;
     }
 
-    public void setSchnorrZKPaij(HashMap<Long, HashMap<Long, SchnorrZKP>> schnorrZKPaij) {
+    public void setSchnorrZKPaij(ConcurrentHashMap<Long, ConcurrentHashMap<Long, SchnorrZKP>> schnorrZKPaij) {
         this.schnorrZKPaij = schnorrZKPaij;
     }
 
-    public HashMap<Long, HashMap<Long, BigInteger>> getBij() {
+    public ConcurrentHashMap<Long, ConcurrentHashMap<Long, BigInteger>> getBij() {
         return bij;
     }
 
-    public void setBij(HashMap<Long, HashMap<Long, BigInteger>> bij) {
+    public void setBij(ConcurrentHashMap<Long, ConcurrentHashMap<Long, BigInteger>> bij) {
         this.bij = bij;
     }
 
-    public HashMap<Long, HashMap<Long, byte[]>> getgPowBij() {
+    public ConcurrentHashMap<Long, ConcurrentHashMap<Long, byte[]>> getgPowBij() {
         return gPowBij;
     }
 
-    public void setgPowBij(HashMap<Long, HashMap<Long, byte[]>> gPowBij) {
+    public void setgPowBij(ConcurrentHashMap<Long, ConcurrentHashMap<Long, byte[]>> gPowBij) {
         this.gPowBij = gPowBij;
     }
 
-    public HashMap<Long, HashMap<Long, SchnorrZKP>> getSchnorrZKPbij() {
+    public ConcurrentHashMap<Long, ConcurrentHashMap<Long, SchnorrZKP>> getSchnorrZKPbij() {
         return schnorrZKPbij;
     }
 
-    public void setSchnorrZKPbij(HashMap<Long, HashMap<Long, SchnorrZKP>> schnorrZKPbij) {
+    public void setSchnorrZKPbij(ConcurrentHashMap<Long, ConcurrentHashMap<Long, SchnorrZKP>> schnorrZKPbij) {
         this.schnorrZKPbij = schnorrZKPbij;
     }
 
-    public HashMap<Long, BigInteger> getYi() {
+    public ConcurrentHashMap<Long, BigInteger> getYi() {
         return yi;
     }
 
-    public void setYi(HashMap<Long, BigInteger> yi) {
+    public void setYi(ConcurrentHashMap<Long, BigInteger> yi) {
         this.yi = yi;
     }
 
-    public HashMap<Long, byte[]> getgPowYi() {
+    public ConcurrentHashMap<Long, byte[]> getgPowYi() {
         return gPowYi;
     }
 
-    public void setgPowYi(HashMap<Long, byte[]> gPowYi) {
+    public void setgPowYi(ConcurrentHashMap<Long, byte[]> gPowYi) {
         this.gPowYi = gPowYi;
     }
 
-    public HashMap<Long, byte[]> getgPowZi() {
+    public ConcurrentHashMap<Long, byte[]> getgPowZi() {
         return gPowZi;
     }
 
-    public void setgPowZi(HashMap<Long, byte[]> gPowZi) {
+    public void setgPowZi(ConcurrentHashMap<Long, byte[]> gPowZi) {
         this.gPowZi = gPowZi;
     }
 
-    public HashMap<Long, SchnorrZKP> getSchnorrZKPyi() {
+    public ConcurrentHashMap<Long, SchnorrZKP> getSchnorrZKPyi() {
         return schnorrZKPyi;
     }
 
-    public void setSchnorrZKPyi(HashMap<Long, SchnorrZKP> schnorrZKPyi) {
+    public void setSchnorrZKPyi(ConcurrentHashMap<Long, SchnorrZKP> schnorrZKPyi) {
         this.schnorrZKPyi = schnorrZKPyi;
     }
 

@@ -15,9 +15,9 @@ import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.security.Security;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
@@ -37,12 +37,12 @@ public class JPAKEPlusNetwork {
     long endTime;
     TreeMap<String, Long> time = new TreeMap<>();
     // ROUND 1
-    HashMap<Long, BigInteger> aij = new HashMap<>();
-    HashMap<Long, BigInteger> gPowAij = new HashMap<>();
-    HashMap<Long, ArrayList<BigInteger>> schnorrZKPaij = new HashMap<>();
-    HashMap<Long, BigInteger> bij = new HashMap<>();
-    HashMap<Long, BigInteger>  gPowBij = new HashMap<>();
-    HashMap<Long, ArrayList<BigInteger>> schnorrZKPbij = new HashMap<>();
+    ConcurrentHashMap<Long, BigInteger> aij = new ConcurrentHashMap<>();
+    ConcurrentHashMap<Long, BigInteger> gPowAij = new ConcurrentHashMap<>();
+    ConcurrentHashMap<Long, ArrayList<BigInteger>> schnorrZKPaij = new ConcurrentHashMap<>();
+    ConcurrentHashMap<Long, BigInteger> bij = new ConcurrentHashMap<>();
+    ConcurrentHashMap<Long, BigInteger>  gPowBij = new ConcurrentHashMap<>();
+    ConcurrentHashMap<Long, ArrayList<BigInteger>> schnorrZKPbij = new ConcurrentHashMap<>();
     BigInteger yi;
     BigInteger gPowYi;
     BigInteger gPowZi;
@@ -51,18 +51,18 @@ public class JPAKEPlusNetwork {
     SchnorrZKP schnorrZKP = new SchnorrZKP();
 
     // *********************************** ROUND 2 ***********************************
-    HashMap<Long, BigInteger> newGen = new HashMap<>();
-    HashMap<Long, BigInteger> bijs = new HashMap<>();
-    HashMap<Long, BigInteger> newGenPowBijs = new HashMap<>();;
-    HashMap<Long, ArrayList<BigInteger>> schnorrZKPbijs = new HashMap<>();
+    ConcurrentHashMap<Long, BigInteger> newGen = new ConcurrentHashMap<>();
+    ConcurrentHashMap<Long, BigInteger> bijs = new ConcurrentHashMap<>();
+    ConcurrentHashMap<Long, BigInteger> newGenPowBijs = new ConcurrentHashMap<>();;
+    ConcurrentHashMap<Long, ArrayList<BigInteger>> schnorrZKPbijs = new ConcurrentHashMap<>();
 
     // *********************************** ROUND 3 ***********************************
     BigInteger gPowZiPowYi;
     ArrayList<BigInteger> chaumPedersonZKPi = new ArrayList<>();
-    HashMap<Long, BigInteger> pairwiseKeysMAC = new HashMap<>();
-    HashMap<Long, BigInteger> pairwiseKeysKC = new HashMap<>();
-    HashMap<Long, BigInteger> hMacsMAC = new HashMap<>();
-    HashMap<Long, BigInteger> hMacsKC = new HashMap<>();
+    ConcurrentHashMap<Long, BigInteger> pairwiseKeysMAC = new ConcurrentHashMap<>();
+    ConcurrentHashMap<Long, BigInteger> pairwiseKeysKC = new ConcurrentHashMap<>();
+    ConcurrentHashMap<Long, BigInteger> hMacsMAC = new ConcurrentHashMap<>();
+    ConcurrentHashMap<Long, BigInteger> hMacsKC = new ConcurrentHashMap<>();
     //   ************************************ KEYS ************************************
     BigInteger sessionKeys;
 
@@ -478,7 +478,7 @@ public class JPAKEPlusNetwork {
     }
 
     public BigInteger computeKey(RoundOneResponse r1, RoundThreeResponse r3) {
-        HashMap<Long, BigInteger> multipleSessionKeys = new HashMap<>();
+        ConcurrentHashMap<Long, BigInteger> multipleSessionKeys = new ConcurrentHashMap<>();
         Log.d("JPAKEPairing", "*********** KEY COMPUTATION ***********");
         startTime = System.currentTimeMillis();
 

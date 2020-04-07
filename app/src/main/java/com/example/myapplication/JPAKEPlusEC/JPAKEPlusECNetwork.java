@@ -7,9 +7,10 @@ import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.example.myapplication.JPAKEPlusEC.POJOs.ECRoundOne;
 import com.example.myapplication.JPAKEPlusEC.POJOs.ECRoundOneResponse;
@@ -53,12 +54,12 @@ public class JPAKEPlusECNetwork {
     long endTime;
     TreeMap<String, Long> time = new TreeMap<>();
     // *********************************** ROUND 1 ***********************************
-    private HashMap<Long, BigInteger> aij = new HashMap<>();
-    private HashMap<Long, byte[]> gPowAij = new HashMap<>();
-    private HashMap<Long, SchnorrZKP> schnorrZKPaij = new HashMap<>();
-    private HashMap<Long, BigInteger> bij = new HashMap<>();
-    private HashMap<Long, byte[]>  gPowBij = new HashMap<>();
-    private HashMap<Long, SchnorrZKP> schnorrZKPbij = new HashMap<>();
+    private ConcurrentHashMap<Long, BigInteger> aij = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Long, byte[]> gPowAij = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Long, SchnorrZKP> schnorrZKPaij = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Long, BigInteger> bij = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Long, byte[]>  gPowBij = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Long, SchnorrZKP> schnorrZKPbij = new ConcurrentHashMap<>();
     private BigInteger yi;
     private byte[] gPowYi;
     private byte[] gPowZi;
@@ -68,13 +69,13 @@ public class JPAKEPlusECNetwork {
 
     // *********************************** ROUND 2 ***********************************
 //    BigInteger [][] newGen = new BigInteger [n][n];
-    private HashMap<Long, byte[]> newGen = new HashMap<>();
+    private ConcurrentHashMap<Long, byte[]> newGen = new ConcurrentHashMap<>();
     //    BigInteger [][] bijs = new BigInteger [n][n];
-    private HashMap<Long, BigInteger> bijs = new HashMap<>();
+    private ConcurrentHashMap<Long, BigInteger> bijs = new ConcurrentHashMap<>();
     //    BigInteger [][] newGenPowBijs = new BigInteger [n][n];
-    private HashMap<Long, byte[]> newGenPowBijs = new HashMap<>();;
+    private ConcurrentHashMap<Long, byte[]> newGenPowBijs = new ConcurrentHashMap<>();;
     //    BigInteger [][][] schnorrZKPbijs = new BigInteger [n][n][2];
-    private HashMap<Long, SchnorrZKP> schnorrZKPbijs = new HashMap<>();
+    private ConcurrentHashMap<Long, SchnorrZKP> schnorrZKPbijs = new ConcurrentHashMap<>();
 
     // *********************************** ROUND 3 ***********************************
 //    BigInteger [] gPowZiPowYi = new BigInteger [n];
@@ -82,13 +83,13 @@ public class JPAKEPlusECNetwork {
     //    BigInteger [][] chaumPedersonZKPi = new BigInteger [n][3]; // {g^s, (g^z)^s, t}
     ChaumPedersonZKP chaumPedersonZKPi = new ChaumPedersonZKP();
     //    BigInteger [][] pairwiseKeysMAC = new BigInteger [n][n];
-    HashMap<Long, BigInteger> pairwiseKeysMAC = new HashMap<>();
+    ConcurrentHashMap<Long, BigInteger> pairwiseKeysMAC = new ConcurrentHashMap<>();
     //    BigInteger [][] pairwiseKeysKC = new BigInteger [n][n];
-    HashMap<Long, BigInteger> pairwiseKeysKC = new HashMap<>();
+    ConcurrentHashMap<Long, BigInteger> pairwiseKeysKC = new ConcurrentHashMap<>();
     //    BigInteger [][] hMacsMAC = new BigInteger [n][n];
-    HashMap<Long, BigInteger> hMacsMAC = new HashMap<>();
+    ConcurrentHashMap<Long, BigInteger> hMacsMAC = new ConcurrentHashMap<>();
     //    BigInteger [][] hMacsKC = new BigInteger [n][n];
-    HashMap<Long, BigInteger> hMacsKC = new HashMap<>();
+    ConcurrentHashMap<Long, BigInteger> hMacsKC = new ConcurrentHashMap<>();
     //   ************************************ KEYS ************************************
     BigInteger sessionKeys;
 
@@ -116,7 +117,7 @@ public class JPAKEPlusECNetwork {
         int n = clients.size();
 
         signerID = clientId + "";
-        HashMap<Long, ECPoint> temp = new HashMap<>();
+        ConcurrentHashMap<Long, ECPoint> temp = new ConcurrentHashMap<>();
 
         // aij in [0, q-1], b_ij in [1, q-1]
         for (int j=0; j<n; j++) {

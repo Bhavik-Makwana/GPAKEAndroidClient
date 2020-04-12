@@ -165,7 +165,7 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
             out.println(gson.toJson(roundThree));
             response = in.readLine();
             RoundThreeResponse rThreeResponse = gson.fromJson(response, RoundThreeResponse.class);
-            boolean r3v = jpake.verifyRoundTwo(rTwoResponse);
+            boolean r3v = jpake.verifyRoundThree(rOneResponse, rThreeResponse);
             if (!r3v) {
                 Log.d("jpake", "FAILED");
                 System.exit(0);

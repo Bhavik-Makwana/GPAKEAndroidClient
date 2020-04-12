@@ -497,7 +497,7 @@ public class JPAKEPlusNetwork {
         int i = r1.getSignerID().indexOf(signerID);
         // ith participant
         int cyclicIndex = getCyclicIndex(i-1, n);
-        BigInteger firstTerm = r1.getgPowYi().get(clients.get(cyclicIndex))
+        BigInteger firstTerm = r1.getgPowYi().get(Long.parseLong(r1.getSignerID().get(cyclicIndex)))
                 .modPow(r1.getYi().get(iID).multiply(BigInteger.valueOf(n)), p);
         BigInteger finalTerm = firstTerm;
 

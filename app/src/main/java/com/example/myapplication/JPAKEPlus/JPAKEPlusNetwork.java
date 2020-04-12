@@ -79,6 +79,19 @@ public class JPAKEPlusNetwork {
         this.clients = clients;
     }
 
+    public void modTest() {
+        BigInteger X = org.bouncycastle.util.BigIntegers.createRandomInRange(BigInteger.ZERO,
+                q.subtract(BigInteger.ONE), new SecureRandom());
+
+        startTime = System.currentTimeMillis();
+
+        g.modPow(X, p);
+
+        endTime = System.currentTimeMillis();
+        System.out.println("mod time: "
+                + (endTime-startTime));
+    }
+
     public RoundOne roundOne() {
         long cID = Long.parseLong(signerID);
         Log.d("JPAKEPairing", "*************** ROUND 1 ***************");
@@ -160,7 +173,6 @@ public class JPAKEPlusNetwork {
             long rightNeighbour = Long.parseLong(r1.getSignerID().get(iPlusOne));
             long leftNeighbour = Long.parseLong(r1.getSignerID().get(iMinusOne));
             r1.getgPowZi().put(current, r1.getgPowYi().get(leftNeighbour).modInverse(p).multiply(r1.getgPowYi().get(rightNeighbour)).mod(p));
-
             if(r1.getgPowZi().get(current).compareTo(BigInteger.ONE) == 0) {
                 Log.d("JPAKEPairing", "Round 1 verification failed at checking g^{y_{i+1}}/g^{y_{i-1}}!=1 for i="+i);
             }
@@ -481,7 +493,6 @@ public class JPAKEPlusNetwork {
         ConcurrentHashMap<Long, BigInteger> multipleSessionKeys = new ConcurrentHashMap<>();
         Log.d("JPAKEPairing", "*********** KEY COMPUTATION ***********");
         startTime = System.currentTimeMillis();
-
         long iID = Long.parseLong(signerID);
         int i = r1.getSignerID().indexOf(signerID);
         // ith participant
@@ -492,7 +503,7 @@ public class JPAKEPlusNetwork {
 
         for (int j=0; j<(n-1) ; j++) {
             cyclicIndex = getCyclicIndex(i+j, n);
-            BigInteger interTerm = r3.getgPowZiPowYi().get(clients.get(cyclicIndex))
+            BigInteger interTerm = r3.getgPowZiPowYi().get(Long.parseLong(r1.getSignerID().get(cyclicIndex)))
                     .modPow(BigInteger.valueOf(n-1-j), p);
             finalTerm = finalTerm.multiply(interTerm).mod(p);
         }
@@ -502,7 +513,6 @@ public class JPAKEPlusNetwork {
 
 
         BigInteger key = getSHA256(finalTerm);
-
         endTime = System.currentTimeMillis();
         time.put("7) Latency of computing key for participant (ms):", (endTime-startTime));
         displayLatency();

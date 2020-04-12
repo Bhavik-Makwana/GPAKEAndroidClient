@@ -95,6 +95,7 @@ public class SPEKEPlus extends AsyncTask<Button, Long, BigInteger>  {
             String json = in.readLine();
             RoundZero roundZero = gson.fromJson(json, RoundZero.class);
             SPEKEPlusNetwork speke = new SPEKEPlusNetwork("deadbeef", p, q, g, roundZero.getClientIDs().size(), Long.toString(clientId));
+            speke.modTest();
             SpekeRoundOne sRoundOne = speke.roundOne();
             data = gson.toJson(sRoundOne);
             out.println(data);

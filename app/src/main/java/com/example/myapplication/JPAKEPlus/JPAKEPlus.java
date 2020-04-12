@@ -121,6 +121,7 @@ public class JPAKEPlus extends AsyncTask<Button, Long, Long>  {
             Log.d("JPAkE", "passed in id " + clientId);
             Log.d("JPAkE", Long.toString(clientId));
             JPAKEPlusNetwork jpake = new JPAKEPlusNetwork("deadbeef", p, q, g, Long.toString(clientId), roundZero.getClientIDs());
+            jpake.modTest();
             RoundOne roundOne = jpake.roundOne();
             data = gson.toJson(roundOne);
             Log.d("JPAKE", "Attempting to send data");

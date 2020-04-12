@@ -61,6 +61,19 @@ public class SPEKEPlusNetwork {
         this.signerID = id;
     }
 
+    public void modTest() {
+        BigInteger X = org.bouncycastle.util.BigIntegers.createRandomInRange(BigInteger.ZERO,
+                q.subtract(BigInteger.ONE), new SecureRandom());
+
+        startTime = System.currentTimeMillis();
+
+        g.modPow(X, p);
+
+        endTime = System.currentTimeMillis();
+        System.out.println("mod time: "
+                + (endTime-startTime));
+    }
+
     public SpekeRoundOne roundOne() {
         System.out.println("*************** ROUND 1 ***************");
         startTime = System.currentTimeMillis();
@@ -330,7 +343,7 @@ public class SPEKEPlusNetwork {
 
 
         BigInteger key = getSHA256(finalTerm);
-                endTime = System.currentTimeMillis();
+        endTime = System.currentTimeMillis();
         time.put("5) Latency of key computation for participant (ms):", (endTime-startTime));
         displayLatency();
         return key;

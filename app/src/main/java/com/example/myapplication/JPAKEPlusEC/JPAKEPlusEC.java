@@ -98,6 +98,7 @@ public class JPAKEPlusEC extends AsyncTask<Button, Long, BigInteger>  {
             ArrayList<Long> clients =  roundZero.getClientIDs();
 
             JPAKEPlusECNetwork jpake = new JPAKEPlusECNetwork("deadbeef", roundZero.getClientIDs().size(), Long.toString(clientId), clients, clientId);
+            jpake.modTest();
             ECRoundOne roundOne = jpake.roundOne();
             data = gson.toJson(roundOne);
             System.out.println("Ggg");

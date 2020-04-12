@@ -108,6 +108,18 @@ public class JPAKEPlusECNetwork {
         this.clientId = clientID;
     }
 
+    public void modTest() {
+        BigInteger X = org.bouncycastle.util.BigIntegers.createRandomInRange(BigInteger.ZERO,
+                q.subtract(BigInteger.ONE), new SecureRandom());
+
+        startTime = System.currentTimeMillis();
+
+        G.multiply(X);
+
+        endTime = System.currentTimeMillis();
+        System.out.println("multiply time: "
+                + (endTime-startTime));
+    }
 
     public ECRoundOne roundOne() {
         Log.d("ec", "*************** ROUND 1 ***************");

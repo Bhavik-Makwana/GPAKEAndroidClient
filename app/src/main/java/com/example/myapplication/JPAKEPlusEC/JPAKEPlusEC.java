@@ -74,7 +74,7 @@ public class JPAKEPlusEC extends AsyncTask<Button, Long, BigInteger>  {
                 }
             }
             try {
-                Thread.sleep(3000);
+                Thread.sleep(5000);
             }
             catch (InterruptedException e) {
 
